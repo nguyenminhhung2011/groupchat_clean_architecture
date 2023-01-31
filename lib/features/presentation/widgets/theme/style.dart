@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-final Color darkPrimaryColor = Color.fromRGBO(56, 142, 60, 1);
+final Color darkPrimaryColor = Color.fromARGB(255, 63, 164, 247);
+const Color blueColor = Colors.blue;
 final Color lightPrimaryColor = Color.fromRGBO(200, 230, 201, 1);
 final Color primaryColor = Color.fromRGBO(76, 175, 80, 1);
 final colorD96F43 = Color.fromRGBO(217, 111, 67, 1);
@@ -11,6 +12,24 @@ final Color textIconColorGray = Colors.black;
 final Color greenColor = Color.fromRGBO(76, 175, 80, 1);
 final color747480 = Color.fromRGBO(116, 116, 128, 1);
 final colorC1C1C1 = Color.fromRGBO(193, 193, 193, 1);
+final colorC1C1C2 = Color.fromARGB(255, 238, 236, 236);
 
 final TextStyle headerText1 = TextStyle(
-    color: textIconColor, fontWeight: FontWeight.bold, fontSize: 30.0);
+    color: textPrimaryColor, fontWeight: FontWeight.w600, fontSize: 30.0);
+final TextStyle headerText2 = TextStyle(
+    color: textPrimaryColor, fontWeight: FontWeight.w500, fontSize: 30.0);
+final TextStyle headerText3 = TextStyle(
+    color: textPrimaryColor, fontWeight: FontWeight.w400, fontSize: 30.0);
+final TextStyle headerText4 = TextStyle(
+    color: textPrimaryColor, fontWeight: FontWeight.w300, fontSize: 30.0);
+final TextStyle headerText5 = TextStyle(
+    color: textPrimaryColor, fontWeight: FontWeight.w200, fontSize: 30.0);
+final TextStyle headerText6 = TextStyle(
+    color: textPrimaryColor, fontWeight: FontWeight.w100, fontSize: 30.0);
+
+// Size
+const double horizontalAllSize = 15.0;
+const double lowSizeText = 12.0;
+const double paddingAllWidget = 15.0;
+const double middleSizeText = 14.0;
+const double headerSizeText = 37.0;

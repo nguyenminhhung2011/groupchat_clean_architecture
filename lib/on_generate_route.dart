@@ -1,15 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:groupchat_clean_architecture/features/presentation/pages/auth/login_page.dart';
+import 'package:groupchat_clean_architecture/features/presentation/pages/auth/sign_in_with_pn_page.dart';
+import 'package:groupchat_clean_architecture/page_const.dart';
 
 class OnGenerateRoute {
   static Route<dynamic> route(RouteSettings settings) {
     final args = settings.arguments;
 
     switch (settings.name) {
-      case "/":
+      case PageConst.loginPage:
         {
           return materialBuilder(widget: LoginPage());
+        }
+      case PageConst.signInWithPhoneNoPage:
+        {
+          return materialBuilder(widget: SignInWithPhoneNumberPage());
         }
       default:
         return materialBuilder(widget: ErrorPage());
