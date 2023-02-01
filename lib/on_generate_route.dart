@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:groupchat_clean_architecture/features/presentation/pages/auth/login_page.dart';
+import 'package:groupchat_clean_architecture/features/presentation/pages/auth/otp_page.dart';
 import 'package:groupchat_clean_architecture/features/presentation/pages/auth/sign_in_with_pn_page.dart';
+import 'package:groupchat_clean_architecture/features/presentation/pages/auth/sign_up_pn_page.dart';
 import 'package:groupchat_clean_architecture/page_const.dart';
 
 class OnGenerateRoute {
@@ -16,6 +18,14 @@ class OnGenerateRoute {
       case PageConst.signInWithPhoneNoPage:
         {
           return materialBuilder(widget: SignInWithPhoneNumberPage());
+        }
+      case PageConst.signUpWithPhoneNoPage:
+        {
+          return materialBuilder(widget: SignUpPhoneNumberPage());
+        }
+      case PageConst.otpPage:
+        {
+          return materialBuilder(widget: OtpPage());
         }
       default:
         return materialBuilder(widget: ErrorPage());

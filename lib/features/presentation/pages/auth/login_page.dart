@@ -16,7 +16,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // final TextEditingController _emailController = TextEditingController();
+  // final TextEditingController _emailController = TextEditingController();q
   // final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 
@@ -113,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
                   'Sign Up',
                   style: headerText1.copyWith(
                     fontSize: lowSizeText,
-                    color: blueColor,
+                    color: purpleColor,
                   ),
                 ),
               ),

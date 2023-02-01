@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-final Color darkPrimaryColor = Color.fromARGB(255, 63, 164, 247);
+final Color darkPrimaryColor = Color.fromARGB(255, 131, 63, 247);
 const Color blueColor = Colors.blue;
+const Color purpleColor = Colors.purple;
 final Color lightPrimaryColor = Color.fromRGBO(200, 230, 201, 1);
 final Color primaryColor = Color.fromRGBO(76, 175, 80, 1);
 final colorD96F43 = Color.fromRGBO(217, 111, 67, 1);
@@ -29,7 +30,8 @@ final TextStyle headerText6 = TextStyle(
 
 // Size
 const double horizontalAllSize = 15.0;
-const double lowSizeText = 12.0;
 const double paddingAllWidget = 15.0;
+const double lowSizeText = 12.0;
 const double middleSizeText = 14.0;
+const double headerSizeText1 = 18.0;
 const double headerSizeText = 37.0;

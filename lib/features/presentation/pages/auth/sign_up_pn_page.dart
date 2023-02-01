@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:groupchat_clean_architecture/features/presentation/widgets/button_custom.dart';
 import 'package:groupchat_clean_architecture/page_const.dart';
 
 import '../../../../generated/assets..dart';
 import '../../widgets/app_bar_widget.dart';
+import '../../widgets/button_custom.dart';
 import '../../widgets/phone_number_field_widget.dart';
 import '../../widgets/theme/style.dart';
 import '../../widgets/theme/template.dart';
 
-class SignInWithPhoneNumberPage extends StatefulWidget {
-  SignInWithPhoneNumberPage({super.key});
+class SignUpPhoneNumberPage extends StatefulWidget {
+  const SignUpPhoneNumberPage({super.key});
 
   @override
-  State<SignInWithPhoneNumberPage> createState() =>
-      _SignInWithPhoneNumberPageState();
+  State<SignUpPhoneNumberPage> createState() => _SignUpPhoneNumberPageState();
 }
 
-class _SignInWithPhoneNumberPageState extends State<SignInWithPhoneNumberPage> {
+class _SignUpPhoneNumberPageState extends State<SignUpPhoneNumberPage> {
   final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
   final TextEditingController _phoneNumberController = TextEditingController();
   bool _check = false;
@@ -39,14 +38,13 @@ class _SignInWithPhoneNumberPageState extends State<SignInWithPhoneNumberPage> {
       body: ListViewMain(
         children: [
           Align(
-            alignment: Alignment.center,
-            child: Image.asset(
-              Assets.mainAppIconAassets,
-              fit: BoxFit.cover,
-              width: widthDevice / 2.5,
-              height: widthDevice / 2.5,
-            ),
-          ),
+              alignment: Alignment.center,
+              child: Image.asset(
+                Assets.mainAppIconAassets,
+                fit: BoxFit.cover,
+                width: widthDevice / 2.5,
+                height: widthDevice / 2.5,
+              )),
           const SizedBox(height: 40.0),
           Align(
             alignment: Alignment.center,
@@ -56,7 +54,7 @@ class _SignInWithPhoneNumberPageState extends State<SignInWithPhoneNumberPage> {
               child: FittedBox(
                 fit: BoxFit.cover,
                 child: Text(
-                  'Log in to your account.',
+                  'Create New Acccount',
                   style: headerText1.copyWith(
                     fontSize: headerSizeText,
                   ),
@@ -86,26 +84,25 @@ class _SignInWithPhoneNumberPageState extends State<SignInWithPhoneNumberPage> {
             ],
           ),
           ButtonCustom(
-            title: 'Sign In',
+            title: 'Sign Up',
             color: darkPrimaryColor,
             textColor: textIconColor,
-            onPress: () {},
+            onPress: () => Navigator.pushNamed(context, PageConst.otpPage),
           ),
           const SizedBox(height: 10.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Don\'t have an account? ',
+                'Already have an account? ',
                 style: headerText3.copyWith(
                   fontSize: lowSizeText,
                 ),
               ),
               InkWell(
-                onTap: () => Navigator.pushNamed(
-                    context, PageConst.signUpWithPhoneNoPage),
+                onTap: () {},
                 child: Text(
-                  'Sign Up',
+                  'Sign In',
                   style: headerText1.copyWith(
                     fontSize: lowSizeText,
                     color: purpleColor,
