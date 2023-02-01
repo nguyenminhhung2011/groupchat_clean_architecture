@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:groupchat_clean_architecture/features/presentation/widgets/app_bar_widget.dart';
+import 'package:groupchat_clean_architecture/features/presentation/widgets/button_custom.dart';
 import 'package:groupchat_clean_architecture/features/presentation/widgets/theme/style.dart';
 import 'package:groupchat_clean_architecture/features/presentation/widgets/theme/template.dart';
 
@@ -10,6 +11,19 @@ class OtpPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final heightDevice = MediaQuery.of(context).size.height;
     return Scaffold(
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(paddingAllWidget),
+        child: SizedBox(
+          height: 60.0,
+          child: ButtonCustom(
+            title: "Verify",
+            color: darkPrimaryColor,
+            textColor: textIconColor,
+            onPress: () {},
+            horizontal: 0.0,
+          ),
+        ),
+      ),
       appBar: appBarWidget(
         IconButton(
           icon: Icon(
@@ -31,6 +45,7 @@ class OtpPage extends StatelessWidget {
         children: [
           SizedBox(height: heightDevice / 4.5),
           FittedBox(
+            fit: BoxFit.cover,
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: horizontalAllSize * 2),
@@ -44,10 +59,26 @@ class OtpPage extends StatelessWidget {
           ),
           SizedBox(height: heightDevice / (4.6 * 6)),
           const Padding(
-            padding: EdgeInsets.symmetric(horizontal: horizontalAllSize),
+            padding: EdgeInsets.symmetric(horizontal: horizontalAllSize * 2),
             child: OTPCodeField(),
           ),
           SizedBox(height: heightDevice / (4.6 * 5)),
+          Align(
+            alignment: Alignment.center,
+            child: RichText(
+              text: TextSpan(
+                style: headerText2.copyWith(fontSize: medumSizeText),
+                children: [
+                  const TextSpan(text: 'Resend conde in '),
+                  TextSpan(
+                    text: '55',
+                    style: TextStyle(color: darkPrimaryColor),
+                  ),
+                  const TextSpan(text: ' s'),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );

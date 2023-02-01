@@ -33,5 +33,6 @@ const double horizontalAllSize = 15.0;
 const double paddingAllWidget = 15.0;
 const double lowSizeText = 12.0;
 const double middleSizeText = 14.0;
+const double medumSizeText = 16.0;
 const double headerSizeText1 = 18.0;
 const double headerSizeText = 37.0;
