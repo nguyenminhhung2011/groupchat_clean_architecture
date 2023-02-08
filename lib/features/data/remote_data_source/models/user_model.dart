@@ -1,4 +1,5 @@
 import '../../../domain/entities/user_entity.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel extends UserEntity {
   UserModel({
@@ -35,19 +36,19 @@ class UserModel extends UserEntity {
     );
   }
 
-  // factory UserModel.fromSnapshot(DocumentSnapshot snapshot) {
-  //   return UserModel(
-  //     name: snapshot.get('name'),
-  //     email: snapshot.get('email'),
-  //     phoneNumber: snapshot.get('phoneNumber'),
-  //     isOnline: snapshot.get('isOnline'),
-  //     uid: snapshot.get('uid'),
-  //     status: snapshot.get('status'),
-  //     profileUrl: snapshot.get('profileUrl'),
-  //     dob: snapshot.get('dob'),
-  //     gender: snapshot.get('gender'),
-  //   );
-  // }
+  factory UserModel.fromSnapshot(DocumentSnapshot snapshot) {
+    return UserModel(
+      name: snapshot.get('name'),
+      email: snapshot.get('email'),
+      phoneNumber: snapshot.get('phoneNumber'),
+      isOnline: snapshot.get('isOnline'),
+      uid: snapshot.get('uid'),
+      status: snapshot.get('status'),
+      profileUrl: snapshot.get('profileUrl'),
+      dob: snapshot.get('dob'),
+      gender: snapshot.get('gender'),
+    );
+  }
 
   Map<String, dynamic> toDocument() {
     return {
