@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/auth/auth_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/pages/auth/login_page.dart';
+import 'package:groupchat_clean_architecture/features/presentation/pages/auth/sign_in_with_pn_page.dart';
 import 'package:groupchat_clean_architecture/on_generate_route.dart';
 import 'package:groupchat_clean_architecture/page_const.dart';
 import 'features/presentation/cubit/credential/credential_cubit.dart';
@@ -10,7 +11,8 @@ import 'package:firebase_core/firebase_core.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
+  await Firebase.initializeApp();
+  await di.init();
   runApp(const MyApp());
 }
 
@@ -36,11 +38,20 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Montserrat',
           primarySwatch: Colors.blue,
         ),
-        initialRoute: PageConst.loginPage,
+        initialRoute: '/',
         onGenerateRoute: OnGenerateRoute.route,
         routes: {
           "/": (context) {
-            return const LoginPage();
+            return BlocBuilder<AuthCubit, AuthState>(
+                builder: (context, authState) {
+              if (authState is AuthenticatedState) {
+                return const Scaffold(
+                  backgroundColor: Colors.white,
+                );
+              } else {
+                return LoginPage();
+              }
+            });
           }
         },
       ),

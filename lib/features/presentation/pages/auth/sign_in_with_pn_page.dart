@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:groupchat_clean_architecture/features/domain/entities/user_entity.dart';
+import 'package:groupchat_clean_architecture/features/presentation/cubit/auth/auth_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/widgets/button_custom.dart';
+import 'package:groupchat_clean_architecture/main.dart';
 import 'package:groupchat_clean_architecture/page_const.dart';
 
 import '../../../../generated/assets..dart';
+import '../../cubit/credential/credential_cubit.dart';
 import '../../widgets/app_bar_widget.dart';
 import '../../widgets/phone_number_field_widget.dart';
 import '../../widgets/theme/style.dart';
@@ -22,6 +27,12 @@ class _SignInWithPhoneNumberPageState extends State<SignInWithPhoneNumberPage> {
   bool _check = false;
 
   @override
+  void dispose() {
+    _phoneNumberController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final widthDevice = MediaQuery.of(context).size.width;
 
@@ -36,7 +47,40 @@ class _SignInWithPhoneNumberPageState extends State<SignInWithPhoneNumberPage> {
         null,
         null,
       ),
-      body: ListViewMain(
+      body: BlocConsumer<CredentialCubit, CredentialState>(
+        listener: (context, credentialState) {
+          if (credentialState is CredentialSuccess) {
+            BlocProvider.of<AuthCubit>(context).loggedIn();
+          }
+          if (credentialState is CredentialFailure) {}
+        },
+        builder: (context, credentialState) {
+          if (credentialState is CredentialLoading) {
+            return Center(
+              child: CircularProgressIndicator(
+                color: primaryColor,
+              ),
+            );
+          }
+          if (credentialState is CredentialSuccess) {
+            return BlocBuilder<AuthCubit, AuthState>(
+                builder: (context, authState) {
+              if (authState is AuthenticatedState) {
+                return const Scaffold(
+                  backgroundColor: Colors.black,
+                );
+              } else {
+                return _bodyWidget(widthDevice);
+              }
+            });
+          }
+          return _bodyWidget(widthDevice);
+        },
+      ),
+    );
+  }
+
+  _bodyWidget(double widthDevice) => ListViewMain(
         children: [
           Align(
             alignment: Alignment.center,
@@ -115,7 +159,13 @@ class _SignInWithPhoneNumberPageState extends State<SignInWithPhoneNumberPage> {
             ],
           ),
         ],
-      ),
-    );
+      );
+
+  void _submitSignIn() {
+    if (_phoneNumberController.text.isEmpty) {
+      return;
+    }
+    BlocProvider.of<CredentialCubit>(context).submitSignIn(
+        user: UserEntity(email: _phoneNumberController.text, password: ''));
   }
 }
