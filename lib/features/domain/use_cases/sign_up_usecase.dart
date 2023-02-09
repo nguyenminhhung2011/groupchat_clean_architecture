@@ -4,7 +4,7 @@ import '../repositories/api_respositoy.dart';
 class SignUpUseCase {
   final ApiRespository respository;
   SignUpUseCase({required this.respository});
-  Future<void> signUp(UserEntity userEntity) {
+  Future<void> call(UserEntity userEntity) {
     return respository.signUp(userEntity);
   }
 }
