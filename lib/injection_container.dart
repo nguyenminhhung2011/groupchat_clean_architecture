@@ -35,6 +35,7 @@ Future<void> init() async {
       signInUseCase: sl.call(),
       forgotPasswordUseCase: sl.call(),
       getCreateCurrentUserUseCaes: sl.call(),
+      googleAuthUseCase: sl.call(),
     ),
   );
 

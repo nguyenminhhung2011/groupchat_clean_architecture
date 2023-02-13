@@ -16,6 +16,7 @@ abstract class ApiRemoteDataSource {
   Future<void> signOut();
   Future<void> getUpdateUser(UserEntity user);
   Future<String> getCurrentUId();
+  Future<void> signUpWithPhoneNumberr(String phoneNumber);
   Stream<List<UserEntity>> getAllUsers();
   // Future<String> createOneToOneChatChannel(EngageUserEntity engageUserEntity);
   // Future<String> getChannelId(EngageUserEntity engageUserEntity);

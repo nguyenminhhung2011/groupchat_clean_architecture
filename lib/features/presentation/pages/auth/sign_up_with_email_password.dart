@@ -1,9 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupchat_clean_architecture/features/domain/entities/user_entity.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/auth/auth_cubit.dart';
-import 'package:groupchat_clean_architecture/features/presentation/pages/home/home_page.dart';
 import 'package:groupchat_clean_architecture/features/presentation/widgets/button_custom.dart';
+import 'package:groupchat_clean_architecture/features/presentation/widgets/text_field_widget.dart';
 import 'package:groupchat_clean_architecture/main.dart';
 import 'package:groupchat_clean_architecture/page_const.dart';
 
@@ -14,22 +15,23 @@ import '../../widgets/phone_number_field_widget.dart';
 import '../../widgets/theme/style.dart';
 import '../../widgets/theme/template.dart';
 
-class SignInWithPhoneNumberPage extends StatefulWidget {
-  SignInWithPhoneNumberPage({super.key});
+class SignUpWithEmalPassword extends StatefulWidget {
+  SignUpWithEmalPassword({super.key});
 
   @override
-  State<SignInWithPhoneNumberPage> createState() =>
-      _SignInWithPhoneNumberPageState();
+  State<SignUpWithEmalPassword> createState() => _SignUpWithEmalPasswordState();
 }
 
-class _SignInWithPhoneNumberPageState extends State<SignInWithPhoneNumberPage> {
+class _SignUpWithEmalPasswordState extends State<SignUpWithEmalPassword> {
   final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
-  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _repasswordController = TextEditingController();
   bool _check = false;
 
   @override
   void dispose() {
-    _phoneNumberController.dispose();
+    // _phoneNumberController.dispose();
     super.dispose();
   }
 
@@ -67,7 +69,9 @@ class _SignInWithPhoneNumberPageState extends State<SignInWithPhoneNumberPage> {
             return BlocBuilder<AuthCubit, AuthState>(
                 builder: (context, authState) {
               if (authState is AuthenticatedState) {
-                return HomePage(uid: authState.uid);
+                return const Scaffold(
+                  backgroundColor: Colors.black,
+                );
               } else {
                 return _bodyWidget(widthDevice);
               }
@@ -90,7 +94,7 @@ class _SignInWithPhoneNumberPageState extends State<SignInWithPhoneNumberPage> {
               height: widthDevice / 2.5,
             ),
           ),
-          const SizedBox(height: 40.0),
+          const SizedBox(height: 30.0),
           Align(
             alignment: Alignment.center,
             child: Padding(
@@ -99,7 +103,7 @@ class _SignInWithPhoneNumberPageState extends State<SignInWithPhoneNumberPage> {
               child: FittedBox(
                 fit: BoxFit.cover,
                 child: Text(
-                  'Log in to your account.',
+                  'Create your account.',
                   style: headerText1.copyWith(
                     fontSize: headerSizeText,
                   ),
@@ -108,7 +112,23 @@ class _SignInWithPhoneNumberPageState extends State<SignInWithPhoneNumberPage> {
             ),
           ),
           const SizedBox(height: 15.0),
-          PhoneNumberFieldWidget(controller: _phoneNumberController),
+          TextFieldWidget(
+            controller: _emailController,
+            hint: "Enter Your Email",
+            trailingIcon: Icons.email,
+          ),
+          const SizedBox(height: 10.0),
+          TextFieldWidget(
+            controller: _passwordController,
+            hint: "Enter Your Password",
+            isPasswordField: true,
+          ),
+          const SizedBox(height: 10.0),
+          TextFieldWidget(
+            controller: _repasswordController,
+            hint: "Enter re pasword",
+            isPasswordField: true,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -129,42 +149,35 @@ class _SignInWithPhoneNumberPageState extends State<SignInWithPhoneNumberPage> {
             ],
           ),
           ButtonCustom(
-            title: 'Sign In',
+            title: 'Sign Up',
             color: darkPrimaryColor,
             textColor: textIconColor,
-            onPress: () {},
-          ),
-          const SizedBox(height: 10.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Don\'t have an account? ',
-                style: headerText3.copyWith(
-                  fontSize: lowSizeText,
-                ),
-              ),
-              InkWell(
-                onTap: () => Navigator.pushNamed(
-                    context, PageConst.signUpWithPhoneNoPage),
-                child: Text(
-                  'Sign Up',
-                  style: headerText1.copyWith(
-                    fontSize: lowSizeText,
-                    color: purpleColor,
-                  ),
-                ),
-              ),
-            ],
+            onPress: _submitSignIn,
           ),
         ],
       );
 
   void _submitSignIn() {
-    if (_phoneNumberController.text.isEmpty) {
+    if (_emailController.text.isEmpty) {
+      print("email is null");
       return;
     }
-    BlocProvider.of<CredentialCubit>(context).submitSignIn(
-        user: UserEntity(email: _phoneNumberController.text, password: ''));
+    if (_passwordController.text.isEmpty) {
+      print("password is null");
+      return;
+    }
+    if (_repasswordController.text.isEmpty) {
+      print("re_pass is null");
+      return;
+    }
+    if (_repasswordController.text == _passwordController.text) {
+    } else {
+      print("re pass is invalid");
+      return;
+    }
+    BlocProvider.of<CredentialCubit>(context).submitSignUp(
+        user: UserEntity(
+            email: _emailController.text,
+            password: _repasswordController.text));
   }
 }

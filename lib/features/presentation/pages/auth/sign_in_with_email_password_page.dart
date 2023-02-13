@@ -14,15 +14,15 @@ import '../../widgets/phone_number_field_widget.dart';
 import '../../widgets/theme/style.dart';
 import '../../widgets/theme/template.dart';
 
-class SignInWithPhoneNumberPage extends StatefulWidget {
-  SignInWithPhoneNumberPage({super.key});
+class SignInWithEmailPassword extends StatefulWidget {
+  SignInWithEmailPassword({super.key});
 
   @override
-  State<SignInWithPhoneNumberPage> createState() =>
-      _SignInWithPhoneNumberPageState();
+  State<SignInWithEmailPassword> createState() =>
+      _SignInWithEmailPasswordState();
 }
 
-class _SignInWithPhoneNumberPageState extends State<SignInWithPhoneNumberPage> {
+class _SignInWithEmailPasswordState extends State<SignInWithEmailPassword> {
   final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
   final TextEditingController _phoneNumberController = TextEditingController();
   bool _check = false;
@@ -67,7 +67,9 @@ class _SignInWithPhoneNumberPageState extends State<SignInWithPhoneNumberPage> {
             return BlocBuilder<AuthCubit, AuthState>(
                 builder: (context, authState) {
               if (authState is AuthenticatedState) {
-                return HomePage(uid: authState.uid);
+                return HomePage(
+                  uid: authState.uid,
+                );
               } else {
                 return _bodyWidget(widthDevice);
               }
@@ -146,7 +148,7 @@ class _SignInWithPhoneNumberPageState extends State<SignInWithPhoneNumberPage> {
               ),
               InkWell(
                 onTap: () => Navigator.pushNamed(
-                    context, PageConst.signUpWithPhoneNoPage),
+                    context, PageConst.signUpWithEmailPassword),
                 child: Text(
                   'Sign Up',
                   style: headerText1.copyWith(

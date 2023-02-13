@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/auth/auth_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/pages/auth/login_page.dart';
 import 'package:groupchat_clean_architecture/features/presentation/pages/auth/sign_in_with_pn_page.dart';
+import 'package:groupchat_clean_architecture/features/presentation/pages/home/home_page.dart';
 import 'package:groupchat_clean_architecture/on_generate_route.dart';
 import 'package:groupchat_clean_architecture/page_const.dart';
 import 'features/presentation/cubit/credential/credential_cubit.dart';
@@ -45,11 +46,9 @@ class MyApp extends StatelessWidget {
             return BlocBuilder<AuthCubit, AuthState>(
                 builder: (context, authState) {
               if (authState is AuthenticatedState) {
-                return const Scaffold(
-                  backgroundColor: Colors.white,
-                );
+                return HomePage(uid: authState.uid);
               } else {
-                return LoginPage();
+                return const LoginPage();
               }
             });
           }

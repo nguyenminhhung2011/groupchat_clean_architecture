@@ -4,7 +4,7 @@ import 'package:groupchat_clean_architecture/features/domain/repositories/api_re
 class SignOutUseCase {
   final ApiRespository respository;
   SignOutUseCase({required this.respository});
-  Future<void> signOut() {
+  Future<void> call() {
     return respository.signOut();
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:groupchat_clean_architecture/features/presentation/widgets/theme/style.dart';
 
 class TextFieldWidget extends StatefulWidget {
   const TextFieldWidget({
@@ -20,13 +21,14 @@ class TextFieldWidget extends StatefulWidget {
     this.readOnly,
     this.checkFormat = true,
     this.checkIconButton = false,
+    this.horizontal,
   });
   final String? title;
   final double? width;
   final int? maxLine;
   final BorderSide? borderSide;
   final String? hint;
-  final Widget? trailingIcon;
+  final IconData? trailingIcon;
   final Widget? prefixWidget;
   final TextStyle? hintStyle;
   final bool? isPasswordField;
@@ -36,18 +38,51 @@ class TextFieldWidget extends StatefulWidget {
   final bool? readOnly;
   final bool checkFormat;
   final bool? checkIconButton;
+  final double? horizontal;
   @override
   State<TextFieldWidget> createState() => _TextFieldWidgetState();
 }
 
 class _TextFieldWidgetState extends State<TextFieldWidget> {
   RxBool isObscure = false.obs;
+  FocusNode _focus = FocusNode();
+  @override
+  void initState() {
+    super.initState();
+    _focus.addListener(_onFocusChange);
+  }
+
+  void _onFocusChange() {
+    setState(() {});
+    debugPrint("Focus: ${_focus.hasFocus.toString()}");
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _focus.removeListener(_onFocusChange);
+    _focus.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: widget.horizontal ?? horizontalAllSize,
+      ),
+      padding: const EdgeInsets.symmetric(
+          horizontal: horizontalAllSize, vertical: 5.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20.0),
+        border: Border.all(
+            width: 1,
+            color: _focus.hasFocus ? purpleColor : Colors.transparent),
+        color: _focus.hasFocus ? purpleColor.withOpacity(0.1) : colorC1C1C2,
+      ),
       width: widget.width ?? double.infinity,
       child: Obx(
         () => TextFormField(
+          focusNode: _focus,
           readOnly: widget.readOnly ?? false,
           validator: widget.validator,
           controller: widget.controller,
@@ -56,12 +91,11 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
           inputFormatters: !widget.checkFormat
               ? [
                   FilteringTextInputFormatter.allow(
-                      RegExp(r'[0-9]+[,.]{0,1}[0-9]*'))
+                    RegExp(r'[0-9]+[,.]{0,1}[0-9]*'),
+                  )
                 ]
               : [],
           decoration: InputDecoration(
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
             floatingLabelBehavior: FloatingLabelBehavior.always,
             labelText: widget.title,
             labelStyle: const TextStyle(
@@ -71,18 +105,14 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
             ),
             hintText: widget.hint,
             hintStyle: widget.hintStyle ??
-                TextStyle(
-                    color: Colors.grey[350]!,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14),
-            border: OutlineInputBorder(
-              // borderRadius: AppDecoration.primaryRadiusBorder,
-              borderSide: widget.borderSide ??
-                  BorderSide(color: Colors.grey[350]!, width: 0.4),
-            ),
+                headerText3.copyWith(
+                  color: colorC1C1C1,
+                  fontSize: middleSizeText,
+                ),
+            border: InputBorder.none,
             suffixIcon: SizedBox(
-              height: 50,
-              width: 50,
+              height: 30,
+              width: 30,
               child: InkWell(
                 onTap: () {
                   if (widget.isPasswordField ?? false) {
@@ -93,7 +123,15 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
                     }
                   }
                 },
-                child: widget.trailingIcon,
+                child: widget.trailingIcon != null
+                    ? Icon(widget.trailingIcon,
+                        color: _focus.hasFocus ? purpleColor : Colors.grey)
+                    : (isObscure.value
+                        ? Icon(Icons.visibility,
+                            color: _focus.hasFocus ? purpleColor : Colors.grey)
+                        : Icon(Icons.visibility_off,
+                            color:
+                                _focus.hasFocus ? purpleColor : Colors.grey)),
               ),
             ),
             prefixIcon: widget.prefixWidget,

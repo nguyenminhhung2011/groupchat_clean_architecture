@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupchat_clean_architecture/features/domain/entities/user_entity.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/forgot_password_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/get_create_current_user_usecase.dart';
+import 'package:groupchat_clean_architecture/features/domain/use_cases/google_auth_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/sign_up_usecase.dart';
 import '../../../domain/use_cases/sign_in_usecase.dart';
 part 'credential_state.dart';
@@ -13,6 +14,7 @@ class CredentialCubit extends Cubit<CredentialState> {
   final SignUpUseCase signUpUseCase;
   final SignInUseCase signInUseCase;
   final ForgotPasswordUseCase forgotPasswordUseCase;
+  final GoogleAuthUseCase googleAuthUseCase;
   final GetCreateCurrentUserUseCaes getCreateCurrentUserUseCaes;
 
   CredentialCubit({
@@ -20,6 +22,7 @@ class CredentialCubit extends Cubit<CredentialState> {
     required this.signInUseCase,
     required this.forgotPasswordUseCase,
     required this.getCreateCurrentUserUseCaes,
+    required this.googleAuthUseCase,
   }) : super(CredentialInitial());
 
   Future<void> submitSignIn({required UserEntity user}) async {
@@ -31,6 +34,17 @@ class CredentialCubit extends Cubit<CredentialState> {
       emit(CredentialFailure());
       // ignore: dead_code_catch_following_catch
     } on SocketException catch (_) {
+      emit(CredentialFailure());
+    }
+  }
+
+  Future<void> submitGoogleAuth() async {
+    try {
+      googleAuthUseCase.call();
+      emit(CredentialSuccess());
+    } on SocketException catch (_) {
+      emit(CredentialFailure());
+    } catch (_) {
       emit(CredentialFailure());
     }
   }

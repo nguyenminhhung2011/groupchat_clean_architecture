@@ -39,4 +39,7 @@ class ApiRespositoryImpl implements ApiRespository {
 
   @override
   Future<void> signUp(UserEntity user) => remoteDataSource.signUp(user);
+  @override
+  Future<void> signUpWithPhoneNumberr(String phoneNumber) =>
+      remoteDataSource.signUpWithPhoneNumberr(phoneNumber);
 }

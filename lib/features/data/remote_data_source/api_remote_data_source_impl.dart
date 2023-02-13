@@ -87,10 +87,32 @@ class ApiRemoteDataSourceImpl implements ApiRemoteDataSource {
       final GoogleSignInAccount? account = await googleSignIn.signIn();
       final GoogleSignInAuthentication googleAuth =
           await account!.authentication;
-      final AuthCredential credential = GoogleAuthProvider.credential(
+      final AuthCredential authCredential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
+      final information =
+          (await auth.signInWithCredential(authCredential)).user;
+      collection.doc(auth.currentUser!.uid).get().then((value) async {
+        if (!value.exists) {
+          var uid = auth.currentUser!.uid;
+          var newUser = UserModel(
+                  name: information!.displayName!,
+                  email: information.email!,
+                  phoneNumber: information.phoneNumber == null
+                      ? ""
+                      : information.phoneNumber!,
+                  profileUrl:
+                      information.photoURL == null ? "" : information.photoURL!,
+                  isOnline: false,
+                  status: "",
+                  dob: "",
+                  gender: "",
+                  uid: information.uid)
+              .toDocument();
+          collection.doc(uid).set(newUser);
+        }
+      }).whenComplete(() => print("New User Created Successfully"));
     } catch (e) {
       print(e);
     }
@@ -115,5 +137,16 @@ class ApiRemoteDataSourceImpl implements ApiRemoteDataSource {
   Future<void> signUp(UserEntity user) async {
     await auth.createUserWithEmailAndPassword(
         email: user.email, password: user.password);
+  }
+
+  @override
+  Future<void> signUpWithPhoneNumberr(String phoneNumber) async {
+    await auth.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      verificationCompleted: (PhoneAuthCredential phoneAuthCredential) {},
+      verificationFailed: (FirebaseAuthException e) {},
+      codeSent: (String verficationId, int? resendToken) {},
+      codeAutoRetrievalTimeout: (String verificationId) {},
+    );
   }
 }

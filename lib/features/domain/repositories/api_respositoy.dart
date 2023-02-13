@@ -13,6 +13,7 @@ abstract class ApiRespository {
   Future<bool> isSignIn();
   Future<void> signIn(UserEntity user);
   Future<void> signUp(UserEntity user);
+  Future<void> signUpWithPhoneNumberr(String phoneNumber);
   Future<void> signOut();
   Future<void> getUpdateUser(UserEntity user);
   Future<String> getCurrentUId();
