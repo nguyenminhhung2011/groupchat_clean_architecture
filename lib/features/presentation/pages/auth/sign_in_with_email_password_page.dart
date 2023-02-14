@@ -11,6 +11,7 @@ import '../../../../generated/assets..dart';
 import '../../cubit/credential/credential_cubit.dart';
 import '../../widgets/app_bar_widget.dart';
 import '../../widgets/phone_number_field_widget.dart';
+import '../../widgets/text_field_widget.dart';
 import '../../widgets/theme/style.dart';
 import '../../widgets/theme/template.dart';
 
@@ -24,12 +25,14 @@ class SignInWithEmailPassword extends StatefulWidget {
 
 class _SignInWithEmailPasswordState extends State<SignInWithEmailPassword> {
   final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
-  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   bool _check = false;
 
   @override
   void dispose() {
-    _phoneNumberController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -39,21 +42,23 @@ class _SignInWithEmailPasswordState extends State<SignInWithEmailPassword> {
 
     return Scaffold(
       key: _scaffoldState,
-      appBar: appBarWidget(
-        IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-        null,
-        null,
-        null,
-      ),
+      // appBar: appBarWidget(
+      //   IconButton(
+      //     icon: const Icon(Icons.arrow_back, color: Colors.black),
+      //     onPressed: () => Navigator.pop(context),
+      //   ),
+      //   null,
+      //   null,
+      //   null,
+      // ),
       body: BlocConsumer<CredentialCubit, CredentialState>(
         listener: (context, credentialState) {
           if (credentialState is CredentialSuccess) {
             BlocProvider.of<AuthCubit>(context).loggedIn();
           }
-          if (credentialState is CredentialFailure) {}
+          if (credentialState is CredentialFailure) {
+            print("Credential is error");
+          }
         },
         builder: (context, credentialState) {
           if (credentialState is CredentialLoading) {
@@ -84,6 +89,13 @@ class _SignInWithEmailPasswordState extends State<SignInWithEmailPassword> {
   _bodyWidget(double widthDevice) => ListViewMain(
         children: [
           Align(
+            alignment: Alignment.topLeft,
+            child: IconButton(
+              icon: Icon(Icons.arrow_back, color: textIconColorGray),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ),
+          Align(
             alignment: Alignment.center,
             child: Image.asset(
               Assets.mainAppIconAassets,
@@ -110,7 +122,17 @@ class _SignInWithEmailPasswordState extends State<SignInWithEmailPassword> {
             ),
           ),
           const SizedBox(height: 15.0),
-          PhoneNumberFieldWidget(controller: _phoneNumberController),
+          TextFieldWidget(
+            controller: _emailController,
+            hint: "Enter Your Email",
+            trailingIcon: Icons.email,
+          ),
+          const SizedBox(height: 10.0),
+          TextFieldWidget(
+            controller: _passwordController,
+            hint: "Enter Your Password",
+            isPasswordField: true,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -134,7 +156,7 @@ class _SignInWithEmailPasswordState extends State<SignInWithEmailPassword> {
             title: 'Sign In',
             color: darkPrimaryColor,
             textColor: textIconColor,
-            onPress: () {},
+            onPress: _submitSignIn,
           ),
           const SizedBox(height: 10.0),
           Row(
@@ -163,10 +185,14 @@ class _SignInWithEmailPasswordState extends State<SignInWithEmailPassword> {
       );
 
   void _submitSignIn() {
-    if (_phoneNumberController.text.isEmpty) {
+    if (_emailController.text.isEmpty) {
+      return;
+    }
+    if (_passwordController.text.isEmpty) {
       return;
     }
     BlocProvider.of<CredentialCubit>(context).submitSignIn(
-        user: UserEntity(email: _phoneNumberController.text, password: ''));
+        user: UserEntity(
+            email: _emailController.text, password: _passwordController.text));
   }
 }

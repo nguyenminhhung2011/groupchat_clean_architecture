@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupchat_clean_architecture/features/domain/entities/user_entity.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/auth/auth_cubit.dart';
+import 'package:groupchat_clean_architecture/features/presentation/pages/home/home_page.dart';
 import 'package:groupchat_clean_architecture/features/presentation/widgets/button_custom.dart';
 import 'package:groupchat_clean_architecture/features/presentation/widgets/text_field_widget.dart';
 import 'package:groupchat_clean_architecture/main.dart';
@@ -69,9 +70,7 @@ class _SignUpWithEmalPasswordState extends State<SignUpWithEmalPassword> {
             return BlocBuilder<AuthCubit, AuthState>(
                 builder: (context, authState) {
               if (authState is AuthenticatedState) {
-                return const Scaffold(
-                  backgroundColor: Colors.black,
-                );
+                return HomePage(uid: authState.uid);
               } else {
                 return _bodyWidget(widthDevice);
               }
