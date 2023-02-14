@@ -7,6 +7,7 @@ import 'package:groupchat_clean_architecture/features/presentation/pages/auth/si
 import 'package:groupchat_clean_architecture/features/presentation/pages/auth/sign_up_pn_page.dart';
 import 'package:groupchat_clean_architecture/features/presentation/pages/auth/sign_up_with_email_password.dart';
 import 'package:groupchat_clean_architecture/features/presentation/pages/home/home_page.dart';
+import 'package:groupchat_clean_architecture/features/presentation/pages/home/profile_page.dart';
 import 'package:groupchat_clean_architecture/page_const.dart';
 
 class OnGenerateRoute {
@@ -37,6 +38,20 @@ class OnGenerateRoute {
       case PageConst.signInWithEmailPassword:
         {
           return materialBuilder(widget: SignInWithEmailPassword());
+        }
+      case PageConst.profilePage:
+        {
+          if (args is String) {
+            return materialBuilder(
+              widget: ProfilePage(
+                uid: args,
+              ),
+            );
+          } else {
+            return materialBuilder(
+              widget: const ErrorPage(),
+            );
+          }
         }
       // case PageConst.homePage:
       //   {

@@ -6,4 +6,5 @@ class PageConst {
   static const String otpPage = "otpPage";
   static const String homePage = "homePage";
   static const String signInWithEmailPassword = "signInWithEmailPassword";
+  static const String profilePage = "profilePage";
 }
