@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:groupchat_clean_architecture/features/data/remote_data_source/storage_provider.dart';
 import 'package:groupchat_clean_architecture/features/presentation/widgets/app_bar_widget.dart';
 import 'package:groupchat_clean_architecture/features/presentation/widgets/theme/style.dart';
 import 'package:groupchat_clean_architecture/features/presentation/widgets/theme/template.dart';
@@ -43,6 +44,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   File? _file;
   final picker = ImagePicker();
+  String url = "";
 
   Future getImage() async {
     try {
@@ -51,14 +53,14 @@ class _ProfilePageState extends State<ProfilePage> {
       setState(() {
         if (pickedFile != null) {
           _file = File(pickedFile.path);
-
-          // StorageProviderRemoteDataSource.uploadFile(file: _image!)
-          //     .then((value) {
-          //   print("profileUrl");
-          //   setState(() {
-          //     _profileUrl = value;
-          //   });
-          // });
+          StorageProviderRemoteDataSource.upLoadFile(file: _file!)
+              .then((value) {
+            print(value);
+            _updateAvata(value);
+            setState(() {
+              url = value;
+            });
+          });
         } else {
           print('No image selected.');
         }
@@ -114,9 +116,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     image: DecorationImage(
                       fit: BoxFit.cover,
                       image: NetworkImage(
-                        currentUser.profileUrl == ""
-                            ? 'https://sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png'
-                            : currentUser.profileUrl,
+                        url != ""
+                            ? url
+                            : currentUser.profileUrl == ""
+                                ? 'https://sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png'
+                                : currentUser.profileUrl,
                       ),
                     ),
                   ),
@@ -183,6 +187,11 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       ),
     );
+  }
+
+  void _updateAvata(String value) {
+    BlocProvider.of<UserCubit>(context)
+        .updateUserImageUseCase(value, widget.uid);
   }
 }
 

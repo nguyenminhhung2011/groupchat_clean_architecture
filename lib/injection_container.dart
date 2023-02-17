@@ -15,6 +15,7 @@ import 'package:groupchat_clean_architecture/features/domain/use_cases/is_sign_i
 import 'package:groupchat_clean_architecture/features/domain/use_cases/sign_in_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/sign_out_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/sign_up_usecase.dart';
+import 'package:groupchat_clean_architecture/features/domain/use_cases/update_user_image_usecase.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/auth/auth_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/credential/credential_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/user/user_cubit.dart';
@@ -41,7 +42,8 @@ Future<void> init() async {
     ),
   );
 
-  sl.registerFactory<UserCubit>(() => UserCubit(getAllUserUseCase: sl.call()));
+  sl.registerFactory<UserCubit>(() => UserCubit(
+      getAllUserUseCase: sl.call(), updateUserImageUseCase: sl.call()));
 
   //UseCase
   sl.registerLazySingleton<ForgotPasswordUseCase>(
@@ -62,6 +64,8 @@ Future<void> init() async {
       () => SignUpUseCase(respository: sl.call()));
   sl.registerLazySingleton<GetAllUserUseCase>(
       () => GetAllUserUseCase(respository: sl.call()));
+  sl.registerLazySingleton<UpdateUserImageUseCase>(
+      () => UpdateUserImageUseCase(respository: sl.call()));
 
   //Responsitory
   sl.registerLazySingleton<ApiRespository>(

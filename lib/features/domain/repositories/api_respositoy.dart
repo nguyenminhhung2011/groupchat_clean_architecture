@@ -18,6 +18,8 @@ abstract class ApiRespository {
   Future<void> getUpdateUser(UserEntity user);
   Future<String> getCurrentUId();
   Stream<List<UserEntity>> getAllUsers();
+  Future<void> updateUserImage(String imageUrl, String uid);
+
   // Future<String> createOneToOneChatChannel(EngageUserEntity engageUserEntity);
   // Future<String> getChannelId(EngageUserEntity engageUserEntity);
   // Future<void> createNewGroup(MyChatEntity myChatEntity,List<String> selectUserList);
