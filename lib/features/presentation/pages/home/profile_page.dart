@@ -30,6 +30,9 @@ class _ProfilePageState extends State<ProfilePage> {
   final _nameController = TextEditingController();
   final _statusController = TextEditingController();
   final _phoneNoController = TextEditingController();
+  final _oldPasswordController = TextEditingController();
+  final _rePasswordController = TextEditingController();
+  final _newPasswordController = TextEditingController();
 
   // ignore: prefer_final_fields
   List<TextEditingController> _listTextController = [
@@ -244,9 +247,69 @@ class _ProfilePageState extends State<ProfilePage> {
             icon: const Icon(Icons.key, color: Colors.white, size: 16.0),
             leadTitle: 'Mat Khau',
             title: '********',
-            select: () {},
+            select: () async {
+              await _changePasswordDialog(context, currentUser);
+            },
           ),
         ],
+      ),
+    );
+  }
+
+  Future<dynamic> _changePasswordDialog(
+      BuildContext context, UserEntity currentUser) {
+    return showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          padding: const EdgeInsets.all(paddingAllWidget),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20.0),
+            color: textIconColor,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Thay doi mat khau',
+                style: headerText1.copyWith(fontSize: headerSizeText1),
+              ),
+              const SizedBox(height: 20.0),
+              TextFieldWidget(
+                controller: _oldPasswordController,
+                horizontal: 5.0,
+                isPasswordField: true,
+                hint: "Enter your password",
+              ),
+              const SizedBox(height: 10.0),
+              TextFieldWidget(
+                controller: _newPasswordController,
+                horizontal: 5.0,
+                isPasswordField: true,
+                hint: "Enter new password",
+              ),
+              const SizedBox(height: 10.0),
+              TextFieldWidget(
+                controller: _rePasswordController,
+                horizontal: 5.0,
+                isPasswordField: true,
+                hint: "Enter re password",
+              ),
+              const SizedBox(height: 15.0),
+              ButtonCustom(
+                title: 'Update',
+                color: darkPrimaryColor,
+                horizontal: 5.0,
+                textColor: textIconColor,
+                onPress: () {
+                  _changePassword(currentUser);
+                },
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -258,7 +321,7 @@ class _ProfilePageState extends State<ProfilePage> {
         backgroundColor: Colors.transparent,
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(paddingAllWidget),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20.0),
             color: Colors.white,
@@ -267,7 +330,7 @@ class _ProfilePageState extends State<ProfilePage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Chinh Sua thong tin ca nhan',
+                'Chinh Sua thong tin',
                 style: headerText1.copyWith(fontSize: headerSizeText1),
               ),
               const SizedBox(height: 20.0),
@@ -317,5 +380,19 @@ class _ProfilePageState extends State<ProfilePage> {
         status: _statusController.text,
       ),
     );
+  }
+
+  void _changePassword(UserEntity currentUser) {
+    // if (_oldPasswordController.text != currentUser.password) {
+    //   return;
+    // }
+    // if (_newPasswordController.text.length < 8) {
+    //   return;
+    // }
+    // if (_newPasswordController.text != _rePasswordController.text) {
+    //   return;
+    // }
+    BlocProvider.of<UserCubit>(context)
+        .changePassword(newPassword: _newPasswordController.text);
   }
 }

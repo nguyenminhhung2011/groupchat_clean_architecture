@@ -6,6 +6,7 @@ import 'package:groupchat_clean_architecture/features/data/remote_data_source/ap
 import 'package:groupchat_clean_architecture/features/data/remote_data_source/api_remote_data_source_impl.dart';
 import 'package:groupchat_clean_architecture/features/data/repositories/api_respositoy_impl.dart';
 import 'package:groupchat_clean_architecture/features/domain/repositories/api_respositoy.dart';
+import 'package:groupchat_clean_architecture/features/domain/use_cases/change_password_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/forgot_password_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/get_all_user_use_case.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/get_create_current_user_usecase.dart';
@@ -48,6 +49,7 @@ Future<void> init() async {
       getAllUserUseCase: sl.call(),
       updateUserImageUseCase: sl.call(),
       getUpdateUserUseCase: sl.call(),
+      changePasswordUseCase: sl.call(),
     ),
   );
 
@@ -74,6 +76,8 @@ Future<void> init() async {
       () => UpdateUserImageUseCase(respository: sl.call()));
   sl.registerLazySingleton<GetUpdateUserUseCase>(
       () => GetUpdateUserUseCase(respository: sl.call()));
+  sl.registerLazySingleton<ChangePasswordUseCase>(
+      () => ChangePasswordUseCase(respository: sl.call()));
 
   //Responsitory
   sl.registerLazySingleton<ApiRespository>(

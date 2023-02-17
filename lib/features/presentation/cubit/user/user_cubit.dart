@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:groupchat_clean_architecture/features/domain/use_cases/change_password_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/get_all_user_use_case.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/get_update_user_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/update_user_image_usecase.dart';
@@ -15,10 +16,12 @@ class UserCubit extends Cubit<UserState> {
   final GetAllUserUseCase getAllUserUseCase;
   final UpdateUserImageUseCase updateUserImageUseCase;
   final GetUpdateUserUseCase getUpdateUserUseCase;
+  final ChangePasswordUseCase changePasswordUseCase;
   UserCubit({
     required this.getAllUserUseCase,
     required this.updateUserImageUseCase,
     required this.getUpdateUserUseCase,
+    required this.changePasswordUseCase,
   }) : super(UserInitial());
 
   Future<void> getUsers() async {
@@ -44,6 +47,16 @@ class UserCubit extends Cubit<UserState> {
       {required String profileUrl, required String uid}) async {
     try {
       await updateUserImageUseCase.call(profileUrl, uid);
+    } on SocketException catch (_) {
+      emit(UserFailure());
+    } catch (_) {
+      emit(UserFailure());
+    }
+  }
+
+  Future<void> changePassword({required String newPassword}) async {
+    try {
+      await changePasswordUseCase.call(newPassword, '');
     } on SocketException catch (_) {
       emit(UserFailure());
     } catch (_) {

@@ -19,6 +19,7 @@ abstract class ApiRemoteDataSource {
   Future<void> signUpWithPhoneNumberr(String phoneNumber);
   Stream<List<UserEntity>> getAllUsers();
   Future<void> updateUserImage(String imageUrl, String uid);
+  Future<void> changePasswod(String newPassword, String uid);
   // Future<String> createOneToOneChatChannel(EngageUserEntity engageUserEntity);
   // Future<String> getChannelId(EngageUserEntity engageUserEntity);
   // Future<void> createNewGroup(MyChatEntity myChatEntity,List<String> selectUserList);

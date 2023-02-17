@@ -35,6 +35,23 @@ class ApiRemoteDataSourceImpl implements ApiRemoteDataSource {
   }
 
   @override
+  Future<void> changePasswod(String newPassword, String uid) async {
+    final user = auth.currentUser;
+
+    // firestore.collection('users').doc(user!.uid).update(
+    //   {
+    //     'password':
+    //   }
+    // );
+
+    await user?.updatePassword(newPassword).then((_) {
+      print("Update password is successfully");
+    }).catchError((error) {
+      print(error.toString());
+    });
+  }
+
+  @override
   Future<void> getCreateCurrentUser(UserEntity user) async {
     final userCollection = firestore.collection('users');
     final uid = await getCurrentUId();

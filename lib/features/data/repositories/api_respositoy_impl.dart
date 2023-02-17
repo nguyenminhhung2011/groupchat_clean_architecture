@@ -43,6 +43,11 @@ class ApiRespositoryImpl implements ApiRespository {
   Future<void> signUpWithPhoneNumberr(String phoneNumber) =>
       remoteDataSource.signUpWithPhoneNumberr(phoneNumber);
 
+  @override
   Future<void> updateUserImage(String url, String uid) =>
       remoteDataSource.updateUserImage(url, uid);
+
+  @override
+  Future<void> changePasswod(String newPassword, String uid) =>
+      remoteDataSource.changePasswod(newPassword, uid);
 }
