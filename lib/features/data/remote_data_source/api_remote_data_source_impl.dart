@@ -20,6 +20,14 @@ class ApiRemoteDataSourceImpl implements ApiRemoteDataSource {
   }
 
   @override
+  Future<void> updateUserImage(String url, String uid) async {
+    final userCollection = firestore.collection('users');
+    userCollection.doc(uid).update({
+      'profileUrl': url,
+    });
+  }
+
+  @override
   Stream<List<UserEntity>> getAllUsers() {
     final userCollection = firestore.collection('users');
     return userCollection.snapshots().map((querySnapshot) =>
