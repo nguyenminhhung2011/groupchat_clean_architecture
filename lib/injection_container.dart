@@ -10,6 +10,7 @@ import 'package:groupchat_clean_architecture/features/domain/use_cases/forgot_pa
 import 'package:groupchat_clean_architecture/features/domain/use_cases/get_all_user_use_case.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/get_create_current_user_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/get_current_uid_usecase.dart';
+import 'package:groupchat_clean_architecture/features/domain/use_cases/get_update_user_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/google_auth_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/is_sign_in_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/sign_in_usecase.dart';
@@ -42,8 +43,13 @@ Future<void> init() async {
     ),
   );
 
-  sl.registerFactory<UserCubit>(() => UserCubit(
-      getAllUserUseCase: sl.call(), updateUserImageUseCase: sl.call()));
+  sl.registerFactory<UserCubit>(
+    () => UserCubit(
+      getAllUserUseCase: sl.call(),
+      updateUserImageUseCase: sl.call(),
+      getUpdateUserUseCase: sl.call(),
+    ),
+  );
 
   //UseCase
   sl.registerLazySingleton<ForgotPasswordUseCase>(
@@ -66,6 +72,8 @@ Future<void> init() async {
       () => GetAllUserUseCase(respository: sl.call()));
   sl.registerLazySingleton<UpdateUserImageUseCase>(
       () => UpdateUserImageUseCase(respository: sl.call()));
+  sl.registerLazySingleton<GetUpdateUserUseCase>(
+      () => GetUpdateUserUseCase(respository: sl.call()));
 
   //Responsitory
   sl.registerLazySingleton<ApiRespository>(

@@ -3,14 +3,20 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupchat_clean_architecture/features/data/remote_data_source/storage_provider.dart';
+import 'package:groupchat_clean_architecture/features/presentation/cubit/auth/auth_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/widgets/app_bar_widget.dart';
+import 'package:groupchat_clean_architecture/features/presentation/widgets/button_custom.dart';
+import 'package:groupchat_clean_architecture/features/presentation/widgets/phone_number_field_widget.dart';
+import 'package:groupchat_clean_architecture/features/presentation/widgets/text_field_widget.dart';
 import 'package:groupchat_clean_architecture/features/presentation/widgets/theme/style.dart';
 import 'package:groupchat_clean_architecture/features/presentation/widgets/theme/template.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
+import '../../../../page_const.dart';
 import '../../../domain/entities/user_entity.dart';
 import '../../cubit/user/user_cubit.dart';
+import '../../widgets/option_setting_item.dart';
 
 class ProfilePage extends StatefulWidget {
   final String uid;
@@ -21,6 +27,16 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final _nameController = TextEditingController();
+  final _statusController = TextEditingController();
+  final _phoneNoController = TextEditingController();
+
+  // ignore: prefer_final_fields
+  List<TextEditingController> _listTextController = [
+    for (int i = 0; i < 3; i++) TextEditingController()
+  ];
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   List<Map<String, dynamic>> listOptions = [
     {
       'leadTitle': 'Che do toi',
@@ -71,6 +87,14 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   @override
+  void dispose() {
+    for (var item in _listTextController) {
+      item.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<UserCubit, UserState>(
       builder: (context, userState) {
@@ -90,7 +114,28 @@ class _ProfilePageState extends State<ProfilePage> {
   Scaffold _bodyWidget(BuildContext context, List<UserEntity> users) {
     final currentUser =
         users.firstWhere((element) => element.uid == widget.uid);
+
+    _nameController.text = currentUser.name;
+    _statusController.text = currentUser.status;
     return Scaffold(
+      key: _scaffoldKey,
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(paddingAllWidget),
+        child: SizedBox(
+          height: 50.0,
+          child: ButtonCustom(
+            title: "Sign Out",
+            color: Colors.red,
+            textColor: textIconColor,
+            onPress: () {
+              BlocProvider.of<AuthCubit>(context).loggedOut();
+              Navigator.pushNamedAndRemoveUntil(
+                  context, PageConst.loginPage, (route) => false);
+            },
+            horizontal: 0.0,
+          ),
+        ),
+      ),
       backgroundColor: Colors.white,
       appBar: appBarWidget(
         IconButton(
@@ -177,75 +222,99 @@ class _ProfilePageState extends State<ProfilePage> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: horizontalAllSize),
             child: Text(
-              'Dich Vu',
+              'Thong tin ca nhan',
               style: headerText1.copyWith(
                 fontSize: medumSizeText,
                 color: color747480,
               ),
             ),
           ),
+          const SizedBox(height: 10.0),
+          OptionSettingItem(
+            color: Colors.blue,
+            icon: const Icon(Icons.person, color: Colors.white, size: 16.0),
+            leadTitle: 'Thong tin',
+            title: 'Minh Hung',
+            select: () async {
+              await _updateUserDialog(context);
+            },
+          ),
+          OptionSettingItem(
+            color: darkPrimaryColor,
+            icon: const Icon(Icons.key, color: Colors.white, size: 16.0),
+            leadTitle: 'Mat Khau',
+            title: '********',
+            select: () {},
+          ),
         ],
+      ),
+    );
+  }
+
+  Future<dynamic> _updateUserDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(10.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20.0),
+            color: Colors.white,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Chinh Sua thong tin ca nhan',
+                style: headerText1.copyWith(fontSize: headerSizeText1),
+              ),
+              const SizedBox(height: 20.0),
+              TextFieldWidget(
+                controller: _nameController,
+                isPasswordField: false,
+                trailingIcon: Icons.person,
+                horizontal: 5,
+              ),
+              const SizedBox(height: 10.0),
+              TextFieldWidget(
+                controller: _statusController,
+                isPasswordField: false,
+                trailingIcon: Icons.description,
+                horizontal: 5,
+              ),
+              const SizedBox(height: 10.0),
+              PhoneNumberFieldWidget(
+                controller: _phoneNoController,
+                horizontal: 5.0,
+              ),
+              const SizedBox(height: 15.0),
+              ButtonCustom(
+                title: 'Update',
+                color: darkPrimaryColor,
+                horizontal: 5.0,
+                textColor: textIconColor,
+                onPress: _updateUser,
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
 
   void _updateAvata(String value) {
     BlocProvider.of<UserCubit>(context)
-        .updateUserImageUseCase(value, widget.uid);
+        .updateAvata(profileUrl: value, uid: widget.uid);
   }
-}
 
-class OptionSettingItem extends StatelessWidget {
-  final Color color;
-  final Widget icon;
-  final String leadTitle;
-  final String title;
-  final VoidCallback select;
-  const OptionSettingItem({
-    super.key,
-    required this.color,
-    required this.icon,
-    required this.leadTitle,
-    required this.title,
-    required this.select,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-          horizontal: horizontalAllSize, vertical: 10.0),
-      child: InkWell(
-        onTap: select,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-              width: 35.0,
-              height: 35.0,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: color,
-              ),
-              child: icon,
-            ),
-            const SizedBox(width: 10.0),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  leadTitle,
-                  style: headerText2.copyWith(fontSize: medumSizeText),
-                ),
-                Text(
-                  title,
-                  style: headerText2.copyWith(fontSize: lowSizeText),
-                ),
-              ],
-            ),
-          ],
-        ),
+  void _updateUser() {
+    BlocProvider.of<UserCubit>(context).updateUser(
+      user: UserEntity(
+        name: _nameController.text,
+        phoneNumber: _phoneNoController.text,
+        status: _statusController.text,
       ),
     );
   }

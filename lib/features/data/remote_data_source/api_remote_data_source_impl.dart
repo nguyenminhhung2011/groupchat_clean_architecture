@@ -69,12 +69,13 @@ class ApiRemoteDataSourceImpl implements ApiRemoteDataSource {
 
   @override
   Future<void> getUpdateUser(UserEntity user) async {
+    print('Update user function is called');
     Map<String, dynamic> userInformation = Map();
     final userCollection = firestore.collection("users");
 
-    if (user.profileUrl != null && user.profileUrl != "") {
-      userInformation['profileUrl'] = user.profileUrl;
-    }
+    // if (user.profileUrl != null && user.profileUrl != "") {
+    //   userInformation['profileUrl'] = user.profileUrl;
+    // }
     if (user.status != null && user.status != "") {
       userInformation['status'] = user.status;
     }
@@ -84,6 +85,8 @@ class ApiRemoteDataSourceImpl implements ApiRemoteDataSource {
     if (user.name != null && user.name != "") {
       userInformation["name"] = user.name;
     }
+
+    print(userInformation);
 
     userCollection.doc(user.uid).update(userInformation);
   }
