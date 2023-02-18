@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/auth/auth_cubit.dart';
+import 'package:groupchat_clean_architecture/features/presentation/cubit/group/group_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/user/user_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/widgets/theme/style.dart';
 import 'package:groupchat_clean_architecture/features/presentation/widgets/theme/template.dart';
@@ -69,6 +70,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     BlocProvider.of<UserCubit>(context).getUsers();
+    BlocProvider.of<GroupCubit>(context).getGroups();
     super.initState();
   }
 
@@ -165,14 +167,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           const SizedBox(height: 10.0),
-          ChatItem(
-            name: 'Nguyen Minh Hung',
-            url: 'assets/images/face.png',
-            lastMess: {
-              'mess': 'Hello nice to meet you',
-              'time': DateTime.now(),
-            },
-          ),
+          ListGroupField()
         ],
       ),
     );
@@ -267,4 +262,35 @@ class _HomePageState extends State<HomePage> {
   // ListViewMain _bodyWidget() {
   //   return
   // }
+}
+
+class ListGroupField extends StatelessWidget {
+  const ListGroupField({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<GroupCubit, GroupState>(
+      builder: (context, groupState) {
+        if (groupState is GroupLoaded) {
+          return Column(
+            children: [
+              ChatItem(
+                name: 'Nguyen Minh Hung',
+                url: 'assets/images/face.png',
+                lastMess: {
+                  'mess': 'Hello nice to meet you',
+                  'time': DateTime.now(),
+                },
+              ),
+            ],
+          );
+        }
+        return Center(
+          child: CircularProgressIndicator(color: darkPrimaryColor),
+        );
+      },
+    );
+  }
 }

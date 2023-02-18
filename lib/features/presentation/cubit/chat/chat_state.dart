@@ -10,11 +10,11 @@ class ChatInitial extends ChatState {
 }
 
 class ChatLoaded extends ChatState {
-  final List<ChatEntity> users;
+  final List<ChatEntity> chats;
 
-  ChatLoaded({required this.users});
+  ChatLoaded({required this.chats});
   @override
-  List<Object> get props => [users];
+  List<Object> get props => [chats];
 }
 
 class ChatSuccess extends ChatState {

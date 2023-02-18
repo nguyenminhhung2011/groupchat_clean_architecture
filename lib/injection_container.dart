@@ -11,6 +11,7 @@ import 'package:groupchat_clean_architecture/features/domain/use_cases/forgot_pa
 import 'package:groupchat_clean_architecture/features/domain/use_cases/get_all_user_use_case.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/get_create_current_user_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/get_current_uid_usecase.dart';
+import 'package:groupchat_clean_architecture/features/domain/use_cases/get_groups_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/get_update_user_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/google_auth_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/is_sign_in_usecase.dart';
@@ -20,6 +21,7 @@ import 'package:groupchat_clean_architecture/features/domain/use_cases/sign_up_u
 import 'package:groupchat_clean_architecture/features/domain/use_cases/update_user_image_usecase.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/auth/auth_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/credential/credential_cubit.dart';
+import 'package:groupchat_clean_architecture/features/presentation/cubit/group/group_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/user/user_cubit.dart';
 
 final sl = GetIt.instance;
@@ -53,6 +55,8 @@ Future<void> init() async {
     ),
   );
 
+  sl.registerFactory<GroupCubit>(() => GroupCubit(getGroupsUseCase: sl.call()));
+
   //UseCase
   sl.registerLazySingleton<ForgotPasswordUseCase>(
       () => ForgotPasswordUseCase(respository: sl.call()));
@@ -78,6 +82,8 @@ Future<void> init() async {
       () => GetUpdateUserUseCase(respository: sl.call()));
   sl.registerLazySingleton<ChangePasswordUseCase>(
       () => ChangePasswordUseCase(respository: sl.call()));
+  sl.registerLazySingleton<GetGroupsUseCase>(
+      () => GetGroupsUseCase(respository: sl.call()));
 
   //Responsitory
   sl.registerLazySingleton<ApiRespository>(
