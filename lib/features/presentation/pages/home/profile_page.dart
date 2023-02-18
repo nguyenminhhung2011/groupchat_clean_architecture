@@ -16,6 +16,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import '../../../../page_const.dart';
 import '../../../domain/entities/user_entity.dart';
 import '../../cubit/user/user_cubit.dart';
+import '../../widgets/dialog/change_password_dialog.dart';
+import '../../widgets/dialog/update_user_dialog.dart';
 import '../../widgets/option_setting_item.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -75,7 +77,7 @@ class _ProfilePageState extends State<ProfilePage> {
           StorageProviderRemoteDataSource.upLoadFile(file: _file!)
               .then((value) {
             print(value);
-            _updateAvata(value);
+            HandleProfileFunction._updateAvata(value, context, widget.uid);
             setState(() {
               url = value;
             });
@@ -103,6 +105,8 @@ class _ProfilePageState extends State<ProfilePage> {
       builder: (context, userState) {
         if (userState is UserLoaded) {
           return _bodyWidget(context, userState.users);
+        } else if (userState is UserFailure) {
+          // return _bodyWidget(context, userState.users);
         }
         return Scaffold(
           backgroundColor: Colors.white,
@@ -260,56 +264,11 @@ class _ProfilePageState extends State<ProfilePage> {
       BuildContext context, UserEntity currentUser) {
     return showDialog(
       context: context,
-      builder: (context) => Dialog(
-        backgroundColor: Colors.transparent,
-        child: Container(
-          padding: const EdgeInsets.all(paddingAllWidget),
-          width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20.0),
-            color: textIconColor,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Thay doi mat khau',
-                style: headerText1.copyWith(fontSize: headerSizeText1),
-              ),
-              const SizedBox(height: 20.0),
-              TextFieldWidget(
-                controller: _oldPasswordController,
-                horizontal: 5.0,
-                isPasswordField: true,
-                hint: "Enter your password",
-              ),
-              const SizedBox(height: 10.0),
-              TextFieldWidget(
-                controller: _newPasswordController,
-                horizontal: 5.0,
-                isPasswordField: true,
-                hint: "Enter new password",
-              ),
-              const SizedBox(height: 10.0),
-              TextFieldWidget(
-                controller: _rePasswordController,
-                horizontal: 5.0,
-                isPasswordField: true,
-                hint: "Enter re password",
-              ),
-              const SizedBox(height: 15.0),
-              ButtonCustom(
-                title: 'Update',
-                color: darkPrimaryColor,
-                horizontal: 5.0,
-                textColor: textIconColor,
-                onPress: () {
-                  _changePassword(currentUser);
-                },
-              )
-            ],
-          ),
-        ),
+      builder: (context) => ChangePasswordDialog(
+        oldPasswordController: _oldPasswordController,
+        newPasswordController: _newPasswordController,
+        rePasswordController: _rePasswordController,
+        currentUser: currentUser,
       ),
     );
   }
@@ -317,72 +276,38 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<dynamic> _updateUserDialog(BuildContext context) {
     return showDialog(
       context: context,
-      builder: (context) => Dialog(
-        backgroundColor: Colors.transparent,
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(paddingAllWidget),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20.0),
-            color: Colors.white,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Chinh Sua thong tin',
-                style: headerText1.copyWith(fontSize: headerSizeText1),
-              ),
-              const SizedBox(height: 20.0),
-              TextFieldWidget(
-                controller: _nameController,
-                isPasswordField: false,
-                trailingIcon: Icons.person,
-                horizontal: 5,
-              ),
-              const SizedBox(height: 10.0),
-              TextFieldWidget(
-                controller: _statusController,
-                isPasswordField: false,
-                trailingIcon: Icons.description,
-                horizontal: 5,
-              ),
-              const SizedBox(height: 10.0),
-              PhoneNumberFieldWidget(
-                controller: _phoneNoController,
-                horizontal: 5.0,
-              ),
-              const SizedBox(height: 15.0),
-              ButtonCustom(
-                title: 'Update',
-                color: darkPrimaryColor,
-                horizontal: 5.0,
-                textColor: textIconColor,
-                onPress: _updateUser,
-              )
-            ],
-          ),
-        ),
+      builder: (context) => UpdateUserDialog(
+        nameController: _nameController,
+        statusController: _statusController,
+        phoneNoController: _phoneNoController,
+        uid: widget.uid,
       ),
     );
   }
+}
 
-  void _updateAvata(String value) {
+class HandleProfileFunction {
+  static void _updateAvata(String value, BuildContext context, String uid) {
     BlocProvider.of<UserCubit>(context)
-        .updateAvata(profileUrl: value, uid: widget.uid);
+        .updateAvata(profileUrl: value, uid: uid);
   }
 
-  void _updateUser() {
-    BlocProvider.of<UserCubit>(context).updateUser(
-      user: UserEntity(
-        name: _nameController.text,
-        phoneNumber: _phoneNoController.text,
-        status: _statusController.text,
-      ),
-    );
+  static void updateUser(BuildContext context, String name, String phoneNumber,
+      String status, VoidCallback callback, String uid) {
+    BlocProvider.of<UserCubit>(context)
+        .updateUser(
+          user: UserEntity(
+            name: name,
+            phoneNumber: phoneNumber,
+            status: status,
+            uid: uid,
+          ),
+        )
+        .then((value) => callback);
   }
 
-  void _changePassword(UserEntity currentUser) {
+  static void changePassword(UserEntity currentUser, BuildContext context,
+      String newPassword, String oldPassword, String rePassword) {
     // if (_oldPasswordController.text != currentUser.password) {
     //   return;
     // }
@@ -393,6 +318,6 @@ class _ProfilePageState extends State<ProfilePage> {
     //   return;
     // }
     BlocProvider.of<UserCubit>(context)
-        .changePassword(newPassword: _newPasswordController.text);
+        .changePassword(newPassword: newPassword);
   }
 }

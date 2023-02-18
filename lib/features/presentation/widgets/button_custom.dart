@@ -7,6 +7,7 @@ class ButtonCustom extends StatelessWidget {
   final Color textColor;
   final double? horizontal;
   final VoidCallback onPress;
+  final bool? circle;
   const ButtonCustom({
     super.key,
     required this.title,
@@ -14,6 +15,7 @@ class ButtonCustom extends StatelessWidget {
     required this.textColor,
     this.horizontal,
     required this.onPress,
+    this.circle = false,
   });
 
   @override
@@ -33,13 +35,15 @@ class ButtonCustom extends StatelessWidget {
         ),
         child: Align(
           alignment: Alignment.center,
-          child: Text(
-            title,
-            style: headerText1.copyWith(
-              fontSize: middleSizeText,
-              color: textColor,
-            ),
-          ),
+          child: !circle!
+              ? Text(
+                  title,
+                  style: headerText1.copyWith(
+                    fontSize: middleSizeText,
+                    color: textColor,
+                  ),
+                )
+              : const CircularProgressIndicator(color: Colors.white),
         ),
       ),
     );
