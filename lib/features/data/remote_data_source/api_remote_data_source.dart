@@ -1,3 +1,5 @@
+import '../../domain/entities/group_entity.dart';
+import '../../domain/entities/text_message_entity.dart';
 import '../../domain/entities/user_entity.dart';
 
 abstract class ApiRemoteDataSource {
@@ -20,6 +22,10 @@ abstract class ApiRemoteDataSource {
   Stream<List<UserEntity>> getAllUsers();
   Future<void> updateUserImage(String imageUrl, String uid);
   Future<void> changePasswod(String newPassword, String uid);
+  Future<void> sendTextMessage(
+      TextMessageEntity textMessageEntity, String channelId);
+  Stream<List<GroupEntity>> getGroups();
+  Stream<List<TextMessageEntity>> getMessages(String channelId);
   // Future<String> createOneToOneChatChannel(EngageUserEntity engageUserEntity);
   // Future<String> getChannelId(EngageUserEntity engageUserEntity);
   // Future<void> createNewGroup(MyChatEntity myChatEntity,List<String> selectUserList);

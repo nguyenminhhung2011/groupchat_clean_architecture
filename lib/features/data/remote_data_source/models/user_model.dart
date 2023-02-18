@@ -12,6 +12,7 @@ class UserModel extends UserEntity {
     String profileUrl = "",
     String dob = "",
     String gender = "",
+    String password = "",
   }) : super(
           name: name,
           email: email,
@@ -22,6 +23,7 @@ class UserModel extends UserEntity {
           profileUrl: profileUrl,
           gender: gender,
           dob: dob,
+          password: password,
         );
 
   factory UserModel.fromJson(Map<String, dynamic> json) {

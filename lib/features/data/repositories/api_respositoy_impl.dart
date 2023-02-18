@@ -2,6 +2,9 @@ import 'package:groupchat_clean_architecture/features/data/remote_data_source/ap
 import 'package:groupchat_clean_architecture/features/domain/entities/user_entity.dart';
 import 'package:groupchat_clean_architecture/features/domain/repositories/api_respositoy.dart';
 
+import '../../domain/entities/group_entity.dart';
+import '../../domain/entities/text_message_entity.dart';
+
 class ApiRespositoryImpl implements ApiRespository {
   final ApiRemoteDataSource remoteDataSource;
 
@@ -50,4 +53,15 @@ class ApiRespositoryImpl implements ApiRespository {
   @override
   Future<void> changePasswod(String newPassword, String uid) =>
       remoteDataSource.changePasswod(newPassword, uid);
+
+  @override
+  Future<void> sendTextMessage(
+          TextMessageEntity textMessageEntity, String channelId) =>
+      remoteDataSource.sendTextMessage(textMessageEntity, channelId);
+
+  @override
+  Stream<List<TextMessageEntity>> getMessages(String channelId) =>
+      remoteDataSource.getMessages(channelId);
+  @override
+  Stream<List<GroupEntity>> getGroups() => remoteDataSource.getGroups();
 }

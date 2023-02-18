@@ -1,10 +1,14 @@
 import 'package:groupchat_clean_architecture/features/data/remote_data_source/api_remote_data_source.dart';
+import 'package:groupchat_clean_architecture/features/data/remote_data_source/models/group_model.dart';
+import 'package:groupchat_clean_architecture/features/data/remote_data_source/models/text_message_model.dart';
 import 'package:groupchat_clean_architecture/features/domain/entities/user_entity.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../domain/entities/group_entity.dart';
+import '../../domain/entities/text_message_entity.dart';
 import 'models/user_model.dart';
 
 class ApiRemoteDataSourceImpl implements ApiRemoteDataSource {
@@ -37,7 +41,6 @@ class ApiRemoteDataSourceImpl implements ApiRemoteDataSource {
   @override
   Future<void> changePasswod(String newPassword, String uid) async {
     final user = auth.currentUser;
-
     // firestore.collection('users').doc(user!.uid).update(
     //   {
     //     'password':
@@ -176,5 +179,23 @@ class ApiRemoteDataSourceImpl implements ApiRemoteDataSource {
       codeSent: (String verficationId, int? resendToken) {},
       codeAutoRetrievalTimeout: (String verificationId) {},
     );
+  }
+
+  Future<void> sendTextMessage(
+      TextMessageEntity textMessageEntity, String channelId) async {}
+
+  @override
+  Stream<List<TextMessageEntity>> getMessages(String channelId) {
+    final onToOneChatRef = firestore.collection("groupChatChannel");
+    final messageRef = onToOneChatRef.doc(channelId).collection('messages');
+    return messageRef.orderBy("time").snapshots().map((snap) =>
+        snap.docs.map((doc) => TextMessageModel.fromSnapshot(doc)).toList());
+  }
+
+  @override
+  Stream<List<GroupEntity>> getGroups() {
+    final groupCollection = firestore.collection("groupChatChannel");
+    return groupCollection.snapshots().map(
+        (query) => query.docs.map((e) => GroupModel.fromSnapshot(e)).toList());
   }
 }

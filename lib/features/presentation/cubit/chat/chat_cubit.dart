@@ -8,13 +8,5 @@ import '../../../domain/use_cases/sign_out_usecase.dart';
 part 'chat_state.dart';
 
 class ChatCubit extends Cubit<ChatState> {
-  final IsSignInUseCase isSignInUseCase;
-  final SignOutUseCase signOutUseCase;
-  final GetCurrentUidUseCase getCurrentUidUseCase;
-
-  ChatCubit(
-      {required this.isSignInUseCase,
-      required this.signOutUseCase,
-      required this.getCurrentUidUseCase})
-      : super(ChatInitial());
+  ChatCubit() : super(ChatInitial());
 }
