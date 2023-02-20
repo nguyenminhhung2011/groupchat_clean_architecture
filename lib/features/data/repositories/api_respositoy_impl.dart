@@ -64,4 +64,7 @@ class ApiRespositoryImpl implements ApiRespository {
       remoteDataSource.getMessages(channelId);
   @override
   Stream<List<GroupEntity>> getGroups() => remoteDataSource.getGroups();
+  @override
+  Future<void> getCreateGroup(GroupEntity groupEntity) =>
+      remoteDataSource.getCreateGroup(groupEntity);
 }

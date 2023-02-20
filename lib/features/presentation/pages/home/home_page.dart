@@ -124,8 +124,8 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-
         ),
+        actions: [],
       ),
       body: ListViewMain(
         children: [
@@ -168,7 +168,44 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           const SizedBox(height: 10.0),
-          ListGroupField()
+          Row(
+            children: [
+              InkWell(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => Dialog(
+                      backgroundColor: Colors.transparent,
+                      child: CreateGroupDiallog(),
+                    ),
+                  );
+                },
+                child: Container(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: horizontalAllSize),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10.0, vertical: 5.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5.0),
+                    color: darkPrimaryColor,
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Create new group ',
+                        style: headerText1.copyWith(
+                            color: Colors.white, fontSize: lowSizeText),
+                      ),
+                      const Icon(Icons.add, color: Colors.white, size: 14.0),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10.0),
+          ListGroupField(),
         ],
       ),
     );
@@ -263,6 +300,35 @@ class _HomePageState extends State<HomePage> {
   // ListViewMain _bodyWidget() {
   //   return
   // }
+}
+
+class CreateGroupDiallog extends StatelessWidget {
+  const CreateGroupDiallog({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(paddingAllWidget - 5.0),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        color: Colors.white,
+      ),
+      child: Column(
+        children: [
+          Text(
+            'Create new Group',
+            style: headerText1.copyWith(
+              fontSize: headerSizeText1,
+              color: textIconColorGray,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class ListGroupField extends StatelessWidget {

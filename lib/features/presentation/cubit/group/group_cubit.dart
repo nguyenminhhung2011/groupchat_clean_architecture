@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:groupchat_clean_architecture/features/domain/use_cases/get_create_group_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/get_groups_usecase.dart';
 
 import '../../../domain/entities/group_entity.dart';
@@ -8,7 +10,10 @@ part 'group_state.dart';
 
 class GroupCubit extends Cubit<GroupState> {
   final GetGroupsUseCase getGroupsUseCase;
-  GroupCubit({required this.getGroupsUseCase}) : super(GroupInitial());
+  final GetCreateGroupUseCase getCreateGroupUseCase;
+  GroupCubit(
+      {required this.getGroupsUseCase, required this.getCreateGroupUseCase})
+      : super(GroupInitial());
 
   Future<void> getGroups() async {
     emit(GroupLoading());
@@ -16,5 +21,15 @@ class GroupCubit extends Cubit<GroupState> {
     streamResponse.listen((event) {
       emit(GroupLoaded(groups: event));
     });
+  }
+
+  Future<void> getCreateGroup({required GroupEntity groupEntity}) async {
+    try {
+      await getCreateGroupUseCase.call(groupEntity);
+    } on SocketException catch (_) {
+      emit(GroupFailure());
+    } catch (_) {
+      emit(GroupFailure());
+    }
   }
 }

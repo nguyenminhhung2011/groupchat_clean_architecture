@@ -8,7 +8,7 @@ abstract class ApiRespository {
   Future<void> googleAuth();
   Future<void> forgotPassword(String email);
 
-  // Future<void> getCreateGroup(GroupEntity groupEntity);
+  Future<void> getCreateGroup(GroupEntity groupEntity);
   Stream<List<GroupEntity>> getGroups();
   // Future<void> joinGroup(GroupEntity groupEntity);
   // Future<void> updateGroup(GroupEntity groupEntity);

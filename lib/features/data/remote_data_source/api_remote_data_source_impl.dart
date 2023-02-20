@@ -194,8 +194,35 @@ class ApiRemoteDataSourceImpl implements ApiRemoteDataSource {
 
   @override
   Stream<List<GroupEntity>> getGroups() {
-    final groupCollection = firestore.collection("groupChatChannel");
-    return groupCollection.snapshots().map(
-        (query) => query.docs.map((e) => GroupModel.fromSnapshot(e)).toList());
+    final groupCollection = firestore.collection("groups");
+    return groupCollection
+        .orderBy("creationTime", descending: true)
+        .snapshots()
+        .map((querySnapshot) =>
+            querySnapshot.docs.map((e) => GroupModel.fromSnapshot(e)).toList());
+  }
+
+  @override
+  Future<void> getCreateGroup(GroupEntity groupEntity) async {
+    final groupCollection = firestore.collection('groups');
+    final groupId = groupCollection.doc().id;
+    groupCollection.doc(groupId).get().then((value) {
+      final newGroup = GroupModel(
+        groupId: groupId,
+        limitUsers: groupEntity.limitUsers,
+        joinUsers: groupEntity.joinUsers,
+        groupProfileImage: groupEntity.groupProfileImage,
+        creationTime: groupEntity.creationTime,
+        groupName: groupEntity.groupName,
+        lastMessage: groupEntity.lastMessage,
+      ).toDocument();
+      if (!value.exists) {
+        groupCollection.doc(groupId).set(newGroup);
+        return;
+      }
+      return;
+    }).catchError((error) {
+      print(error);
+    });
   }
 }
