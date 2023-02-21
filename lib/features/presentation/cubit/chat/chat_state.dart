@@ -10,7 +10,7 @@ class ChatInitial extends ChatState {
 }
 
 class ChatLoaded extends ChatState {
-  final List<ChatEntity> chats;
+  final List<TextMessageEntity> chats;
 
   ChatLoaded({required this.chats});
   @override

@@ -13,6 +13,7 @@ abstract class ApiRespository {
   // Future<void> joinGroup(GroupEntity groupEntity);
   // Future<void> updateGroup(GroupEntity groupEntity);
 
+  Future<void> updateGroup(GroupEntity groupEntity);
   Future<bool> isSignIn();
   Future<void> signIn(UserEntity user);
   Future<void> signUp(UserEntity user);

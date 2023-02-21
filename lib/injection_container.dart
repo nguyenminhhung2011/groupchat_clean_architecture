@@ -13,14 +13,18 @@ import 'package:groupchat_clean_architecture/features/domain/use_cases/get_creat
 import 'package:groupchat_clean_architecture/features/domain/use_cases/get_create_group_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/get_current_uid_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/get_groups_usecase.dart';
+import 'package:groupchat_clean_architecture/features/domain/use_cases/get_message_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/get_update_user_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/google_auth_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/is_sign_in_usecase.dart';
+import 'package:groupchat_clean_architecture/features/domain/use_cases/send_text_message_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/sign_in_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/sign_out_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/sign_up_usecase.dart';
+import 'package:groupchat_clean_architecture/features/domain/use_cases/update_group_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/update_user_image_usecase.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/auth/auth_cubit.dart';
+import 'package:groupchat_clean_architecture/features/presentation/cubit/chat/chat_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/credential/credential_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/group/group_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/user/user_cubit.dart';
@@ -57,7 +61,17 @@ Future<void> init() async {
   );
 
   sl.registerFactory<GroupCubit>(() => GroupCubit(
-      getGroupsUseCase: sl.call(), getCreateGroupUseCase: sl.call()));
+      getGroupsUseCase: sl.call(),
+      getCreateGroupUseCase: sl.call(),
+      updateGroupUseCase: sl.call()));
+
+  sl.registerFactory<ChatCubit>(
+    () => ChatCubit(
+      getMessageUseCase: sl.call(),
+      sendMessageUseCase: sl.call(),
+    ),
+  );
+
   //UseCase
   sl.registerLazySingleton<ForgotPasswordUseCase>(
       () => ForgotPasswordUseCase(respository: sl.call()));
@@ -87,6 +101,12 @@ Future<void> init() async {
       () => GetGroupsUseCase(respository: sl.call()));
   sl.registerLazySingleton<GetCreateGroupUseCase>(
       () => GetCreateGroupUseCase(respository: sl.call()));
+  sl.registerLazySingleton<GetMessageUseCase>(
+      () => GetMessageUseCase(respository: sl.call()));
+  sl.registerLazySingleton<SendMessageUseCase>(
+      () => SendMessageUseCase(respository: sl.call()));
+  sl.registerLazySingleton<UpdateGroupUseCase>(
+      () => UpdateGroupUseCase(respository: sl.call()));
 
   //Responsitory
   sl.registerLazySingleton<ApiRespository>(

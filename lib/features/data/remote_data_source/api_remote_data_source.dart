@@ -26,6 +26,7 @@ abstract class ApiRemoteDataSource {
       TextMessageEntity textMessageEntity, String channelId);
   Stream<List<GroupEntity>> getGroups();
   Stream<List<TextMessageEntity>> getMessages(String channelId);
+  Future<void> updateGroup(GroupEntity groupEntity);
   Future<void> getCreateGroup(GroupEntity groupEntity);
   // Future<String> createOneToOneChatChannel(EngageUserEntity engageUserEntity);
   // Future<String> getChannelId(EngageUserEntity engageUserEntity);

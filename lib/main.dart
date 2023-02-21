@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/auth/auth_cubit.dart';
+import 'package:groupchat_clean_architecture/features/presentation/cubit/chat/chat_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/group/group_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/user/user_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/pages/auth/login_page.dart';
@@ -39,6 +40,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<GroupCubit>(
           create: (_) => di.sl<GroupCubit>(),
         ),
+        BlocProvider<ChatCubit>(
+          create: (_) => di.sl<ChatCubit>(),
+        )
       ],
       child: MaterialApp(
         title: 'Group Chat',

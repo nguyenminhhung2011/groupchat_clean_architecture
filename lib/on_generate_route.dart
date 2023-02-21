@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:groupchat_clean_architecture/features/domain/entities/single_chat_entity.dart';
 import 'package:groupchat_clean_architecture/features/presentation/pages/auth/login_page.dart';
 import 'package:groupchat_clean_architecture/features/presentation/pages/auth/otp_page.dart';
 import 'package:groupchat_clean_architecture/features/presentation/pages/auth/sign_in_with_email_password_page.dart';
@@ -8,6 +9,7 @@ import 'package:groupchat_clean_architecture/features/presentation/pages/auth/si
 import 'package:groupchat_clean_architecture/features/presentation/pages/auth/sign_up_with_email_password.dart';
 import 'package:groupchat_clean_architecture/features/presentation/pages/home/home_page.dart';
 import 'package:groupchat_clean_architecture/features/presentation/pages/home/profile_page.dart';
+import 'package:groupchat_clean_architecture/features/presentation/pages/single_chat/single_chat_page.dart';
 import 'package:groupchat_clean_architecture/page_const.dart';
 
 class OnGenerateRoute {
@@ -38,6 +40,19 @@ class OnGenerateRoute {
       case PageConst.signInWithEmailPassword:
         {
           return materialBuilder(widget: SignInWithEmailPassword());
+        }
+      case PageConst.singleChatPage:
+        {
+          if (args is SingleChatEntity) {
+            return materialBuilder(
+                widget: SingleChatPage(
+              singleChatEntity: args,
+            ));
+          } else {
+            return materialBuilder(
+              widget: ErrorPage(),
+            );
+          }
         }
       case PageConst.profilePage:
         {

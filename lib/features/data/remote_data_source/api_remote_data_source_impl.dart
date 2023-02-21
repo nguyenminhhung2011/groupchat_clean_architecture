@@ -41,12 +41,6 @@ class ApiRemoteDataSourceImpl implements ApiRemoteDataSource {
   @override
   Future<void> changePasswod(String newPassword, String uid) async {
     final user = auth.currentUser;
-    // firestore.collection('users').doc(user!.uid).update(
-    //   {
-    //     'password':
-    //   }
-    // );
-
     await user?.updatePassword(newPassword).then((_) {
       print("Update password is successfully");
     }).catchError((error) {
@@ -182,7 +176,27 @@ class ApiRemoteDataSourceImpl implements ApiRemoteDataSource {
   }
 
   Future<void> sendTextMessage(
-      TextMessageEntity textMessageEntity, String channelId) async {}
+      TextMessageEntity textMessageEntity, String channelId) async {
+    final messageRef = firestore
+        .collection('groupChatChannel')
+        .doc(channelId)
+        .collection('messages');
+
+    final messageId = messageRef.doc().id;
+
+    final newMessage = TextMessageModel(
+      content: textMessageEntity.content,
+      messageId: messageId,
+      receiverName: textMessageEntity.receiverName,
+      recipientId: textMessageEntity.recipientId,
+      senderId: textMessageEntity.senderId,
+      senderName: textMessageEntity.senderName,
+      time: textMessageEntity.time,
+      type: textMessageEntity.type,
+    ).toDocument();
+
+    messageRef.doc(messageId).set(newMessage);
+  }
 
   @override
   Stream<List<TextMessageEntity>> getMessages(String channelId) {
@@ -224,5 +238,22 @@ class ApiRemoteDataSourceImpl implements ApiRemoteDataSource {
     }).catchError((error) {
       print(error);
     });
+  }
+
+  @override
+  Future<void> updateGroup(GroupEntity groupEntity) async {
+    Map<String, dynamic> groupInformation = Map();
+    final groupCollection = firestore.collection('groups');
+    if (groupEntity.groupProfileImage != null &&
+        groupEntity.groupProfileImage != "")
+      groupInformation['groupProfileImage'] = groupEntity.groupProfileImage;
+    if (groupEntity.groupName != null && groupEntity.groupName != "")
+      groupInformation["groupName"] = groupEntity.groupName;
+    if (groupEntity.lastMessage != null && groupEntity.lastMessage != "")
+      groupInformation["lastMessage"] = groupEntity.lastMessage;
+    if (groupEntity.creationTime != null)
+      groupInformation["creationTime"] = groupEntity.creationTime;
+
+    groupCollection.doc(groupEntity.groupId).update(groupInformation);
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupchat_clean_architecture/features/data/remote_data_source/storage_provider.dart';
 import 'package:groupchat_clean_architecture/features/domain/entities/group_entity.dart';
+import 'package:groupchat_clean_architecture/features/domain/entities/single_chat_entity.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/auth/auth_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/group/group_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/user/user_cubit.dart';
@@ -194,7 +195,9 @@ class _HomePageState extends State<HomePage> {
           ),
           // const SizedBox(height: 10.0),
           const SizedBox(height: 10.0),
-          ListGroupField(),
+          ListGroupField(
+            currentUser: currentUser,
+          ),
         ],
       ),
     );
@@ -292,8 +295,10 @@ class _HomePageState extends State<HomePage> {
 }
 
 class ListGroupField extends StatelessWidget {
+  final UserEntity currentUser;
   const ListGroupField({
     super.key,
+    required this.currentUser,
   });
 
   @override
@@ -311,6 +316,15 @@ class ListGroupField extends StatelessWidget {
                     'mess': e.lastMessage,
                     'time': DateTime.now(),
                   },
+                  callback: () => Navigator.of(context).pushNamed(
+                    PageConst.singleChatPage,
+                    arguments: SingleChatEntity(
+                      username: currentUser.name,
+                      groupId: e.groupId,
+                      groupName: e.groupName,
+                      uid: currentUser.uid,
+                    ),
+                  ),
                 ),
               )
             ],

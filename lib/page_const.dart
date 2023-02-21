@@ -7,4 +7,5 @@ class PageConst {
   static const String homePage = "homePage";
   static const String signInWithEmailPassword = "signInWithEmailPassword";
   static const String profilePage = "profilePage";
+  static const String singleChatPage = "singleChatPage";
 }

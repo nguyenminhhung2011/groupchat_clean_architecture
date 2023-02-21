@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:groupchat_clean_architecture/features/domain/entities/single_chat_entity.dart';
 import 'package:groupchat_clean_architecture/features/presentation/widgets/theme/style.dart';
+import 'package:groupchat_clean_architecture/page_const.dart';
 
 class ChatItem extends StatelessWidget {
   final String name;
   final String url;
   final Map<String, dynamic> lastMess;
+  final VoidCallback callback;
   const ChatItem({
     super.key,
     required this.name,
     required this.url,
     required this.lastMess,
+    required this.callback,
   });
 
   @override
@@ -18,7 +22,7 @@ class ChatItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(
           horizontal: horizontalAllSize - 5.0, vertical: 5.0),
       child: InkWell(
-        onTap: () {},
+        onTap: callback,
         child: Row(
           children: [
             Stack(
