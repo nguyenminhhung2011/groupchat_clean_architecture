@@ -15,66 +15,70 @@ class ChatItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: horizontalAllSize - 5.0),
-      child: Row(
-        children: [
-          Stack(
-            children: [
-              Container(
-                width: 60.0,
-                height: 60.0,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: AssetImage(url),
-                  ),
-                ),
-              ),
-              Positioned(
-                top: 45.0,
-                left: 45,
-                child: Container(
-                  width: 15.0,
-                  height: 15.0,
-                  decoration: BoxDecoration(
-                    border: Border.all(width: 2.0, color: Colors.white),
-                    color: Colors.green,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(width: 10.0),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      padding: const EdgeInsets.symmetric(
+          horizontal: horizontalAllSize - 5.0, vertical: 5.0),
+      child: InkWell(
+        onTap: () {},
+        child: Row(
+          children: [
+            Stack(
               children: [
-                Text(
-                  name,
-                  style: headerText1.copyWith(fontSize: medumSizeText),
-                  maxLines: 1,
+                Container(
+                  width: 60.0,
+                  height: 60.0,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: NetworkImage(url),
+                    ),
+                  ),
                 ),
-                const SizedBox(height: 2.0),
-                Text(
-                  lastMess['mess'],
-                  style: headerText2.copyWith(
-                    fontSize: lowSizeText,
+                Positioned(
+                  top: 45.0,
+                  left: 45,
+                  child: Container(
+                    width: 15.0,
+                    height: 15.0,
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 2.0, color: Colors.white),
+                      color: Colors.green,
+                      shape: BoxShape.circle,
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Text(
-              '',
-              style: headerText1.copyWith(
-                  fontSize: lowSizeText, color: Colors.grey),
+            const SizedBox(width: 10.0),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    name,
+                    style: headerText1.copyWith(fontSize: medumSizeText),
+                    maxLines: 1,
+                  ),
+                  const SizedBox(height: 2.0),
+                  Text(
+                    lastMess['mess'],
+                    style: headerText2.copyWith(
+                      fontSize: lowSizeText,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Text(
+                '',
+                style: headerText1.copyWith(
+                    fontSize: lowSizeText, color: Colors.grey),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

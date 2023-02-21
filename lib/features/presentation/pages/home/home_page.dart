@@ -1,15 +1,23 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:groupchat_clean_architecture/features/data/remote_data_source/storage_provider.dart';
+import 'package:groupchat_clean_architecture/features/domain/entities/group_entity.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/auth/auth_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/group/group_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/user/user_cubit.dart';
+import 'package:groupchat_clean_architecture/features/presentation/widgets/button_custom.dart';
 import 'package:groupchat_clean_architecture/features/presentation/widgets/theme/style.dart';
 import 'package:groupchat_clean_architecture/features/presentation/widgets/theme/template.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../page_const.dart';
 import '../../../domain/entities/user_entity.dart';
 import '../../widgets/chat_item.dart';
+import '../../widgets/dialog/create_group_dialog.dart';
 import '../../widgets/main_page_option_item.dart';
 import '../../widgets/person_acti_item.dart';
 import '../../widgets/text_field_widget.dart';
@@ -96,6 +104,23 @@ class _HomePageState extends State<HomePage> {
   Scaffold _bodyWidget(List<UserEntity> users) {
     final currentUser = users.firstWhere((e) => e.uid == widget.uid);
     return Scaffold(
+      floatingActionButton: IconButton(
+        color: blueColor,
+        hoverColor: blueColor,
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => Dialog(
+              backgroundColor: Colors.transparent,
+              child: CreateGroupDiallog(uid: widget.uid),
+            ),
+          );
+        },
+        icon: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+      ),
       key: _scaffoldKey,
       backgroundColor: Colors.white,
       drawer: _drawerWidget(currentUser),
@@ -167,43 +192,7 @@ class _HomePageState extends State<HomePage> {
               ...listPersonActi.map((e) => e),
             ],
           ),
-          const SizedBox(height: 10.0),
-          Row(
-            children: [
-              InkWell(
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => Dialog(
-                      backgroundColor: Colors.transparent,
-                      child: CreateGroupDiallog(),
-                    ),
-                  );
-                },
-                child: Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: horizontalAllSize),
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0, vertical: 5.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5.0),
-                    color: darkPrimaryColor,
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Create new group ',
-                        style: headerText1.copyWith(
-                            color: Colors.white, fontSize: lowSizeText),
-                      ),
-                      const Icon(Icons.add, color: Colors.white, size: 14.0),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+          // const SizedBox(height: 10.0),
           const SizedBox(height: 10.0),
           ListGroupField(),
         ],
@@ -302,35 +291,6 @@ class _HomePageState extends State<HomePage> {
   // }
 }
 
-class CreateGroupDiallog extends StatelessWidget {
-  const CreateGroupDiallog({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(paddingAllWidget - 5.0),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.0),
-        color: Colors.white,
-      ),
-      child: Column(
-        children: [
-          Text(
-            'Create new Group',
-            style: headerText1.copyWith(
-              fontSize: headerSizeText1,
-              color: textIconColorGray,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class ListGroupField extends StatelessWidget {
   const ListGroupField({
     super.key,
@@ -343,14 +303,16 @@ class ListGroupField extends StatelessWidget {
         if (groupState is GroupLoaded) {
           return Column(
             children: [
-              ChatItem(
-                name: 'Nguyen Minh Hung',
-                url: 'assets/images/face.png',
-                lastMess: {
-                  'mess': 'Hello nice to meet you',
-                  'time': DateTime.now(),
-                },
-              ),
+              ...groupState.groups.map(
+                (e) => ChatItem(
+                  name: e.groupName,
+                  url: e.groupProfileImage,
+                  lastMess: {
+                    'mess': e.lastMessage,
+                    'time': DateTime.now(),
+                  },
+                ),
+              )
             ],
           );
         }
@@ -361,3 +323,65 @@ class ListGroupField extends StatelessWidget {
     );
   }
 }
+
+// Widget profileWidget({String? imageUrl,File? image}){
+//   print("image value $image");
+//   if (image==null){
+//     if (imageUrl==null)
+//       return Image.asset(
+//         'assets/profile_default.png',
+//         fit: BoxFit.cover,
+//       );
+//     else
+//       return CachedNetworkImage(
+//         imageUrl: "$imageUrl",
+//         fit: BoxFit.cover,
+//         progressIndicatorBuilder: (context, url, downloadProgress) =>
+//             SizedBox(height: 50,width: 50,child: Container(margin: EdgeInsets.all(20),child: CircularProgressIndicator())),
+//         errorWidget: (context, url, error) => Icon(Icons.error),
+//       );
+//   }else{
+//     return Image.file(image,fit: BoxFit.cover,);
+//   }
+// }
+
+// Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: horizontalAllSize),
+          //   child: Row(
+          //     children: [
+          //       Text('All Group',
+          //           style: headerText1.copyWith(fontSize: medumSizeText)),
+          //       const Spacer(),
+          //       InkWell(
+          //         onTap: () {
+          //           showDialog(
+          //             context: context,
+          //             builder: (context) => Dialog(
+          //               backgroundColor: Colors.transparent,
+          //               child: CreateGroupDiallog(),
+          //             ),
+          //           );
+          //         },
+          //         child: Container(
+          //           padding: const EdgeInsets.symmetric(
+          //               horizontal: 10.0, vertical: 5.0),
+          //           decoration: BoxDecoration(
+          //             borderRadius: BorderRadius.circular(5.0),
+          //             color: darkPrimaryColor,
+          //           ),
+          //           child: Row(
+          //             mainAxisSize: MainAxisSize.min,
+          //             children: [
+          //               Text(
+          //                 'Create new group ',
+          //                 style: headerText1.copyWith(
+          //                     color: Colors.white, fontSize: lowSizeText),
+          //               ),
+          //               const Icon(Icons.add, color: Colors.white, size: 14.0),
+          //             ],
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
