@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/get_create_group_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/get_groups_usecase.dart';
+import 'package:groupchat_clean_architecture/features/domain/use_cases/join_group_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/update_group_usecase.dart';
 
 import '../../../domain/entities/group_entity.dart';
@@ -13,10 +14,12 @@ class GroupCubit extends Cubit<GroupState> {
   final GetGroupsUseCase getGroupsUseCase;
   final GetCreateGroupUseCase getCreateGroupUseCase;
   final UpdateGroupUseCase updateGroupUseCase;
+  final JoinGroupUseCase joinGroupUseCase;
   GroupCubit(
       {required this.getGroupsUseCase,
       required this.getCreateGroupUseCase,
-      required this.updateGroupUseCase})
+      required this.updateGroupUseCase,
+      required this.joinGroupUseCase})
       : super(GroupInitial());
 
   Future<void> getGroups() async {
@@ -40,6 +43,16 @@ class GroupCubit extends Cubit<GroupState> {
   Future<void> updateGroup({required GroupEntity groupEntity}) async {
     try {
       await updateGroupUseCase.call(groupEntity: groupEntity);
+    } on SocketException catch (_) {
+      emit(GroupFailure());
+    } catch (_) {
+      emit(GroupFailure());
+    }
+  }
+
+  Future<void> joinGroup({required GroupEntity groupEntity}) async {
+    try {
+      await joinGroupUseCase.call(groupEntity: groupEntity);
     } on SocketException catch (_) {
       emit(GroupFailure());
     } catch (_) {

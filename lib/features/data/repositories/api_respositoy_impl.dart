@@ -71,4 +71,7 @@ class ApiRespositoryImpl implements ApiRespository {
   @override
   Future<void> updateGroup(GroupEntity groupEntity) =>
       remoteDataSource.updateGroup(groupEntity);
+  @override
+  Future<void> joinGroup(GroupEntity groupEntity) =>
+      remoteDataSource.joinGroup(groupEntity);
 }

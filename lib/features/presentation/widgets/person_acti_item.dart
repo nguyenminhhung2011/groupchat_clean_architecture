@@ -30,7 +30,11 @@ class PersonAcityItem extends StatelessWidget {
                     shape: BoxShape.circle,
                     image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: AssetImage(image),
+                      image: NetworkImage(
+                        image == ""
+                            ? 'https://sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png'
+                            : image,
+                      ),
                     ),
                   ),
                 ),
@@ -51,9 +55,9 @@ class PersonAcityItem extends StatelessWidget {
             ),
             const SizedBox(height: 2.0),
             Text(
-              name,
+              name == "" ? "Null" : name,
               textAlign: TextAlign.center,
-              maxLines: 2,
+              maxLines: 1,
               style: headerText2.copyWith(fontSize: lowSizeText),
             ),
           ],

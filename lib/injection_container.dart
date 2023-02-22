@@ -17,6 +17,7 @@ import 'package:groupchat_clean_architecture/features/domain/use_cases/get_messa
 import 'package:groupchat_clean_architecture/features/domain/use_cases/get_update_user_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/google_auth_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/is_sign_in_usecase.dart';
+import 'package:groupchat_clean_architecture/features/domain/use_cases/join_group_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/send_text_message_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/sign_in_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/sign_out_usecase.dart';
@@ -61,6 +62,7 @@ Future<void> init() async {
   );
 
   sl.registerFactory<GroupCubit>(() => GroupCubit(
+      joinGroupUseCase: sl.call(),
       getGroupsUseCase: sl.call(),
       getCreateGroupUseCase: sl.call(),
       updateGroupUseCase: sl.call()));
@@ -107,6 +109,8 @@ Future<void> init() async {
       () => SendMessageUseCase(respository: sl.call()));
   sl.registerLazySingleton<UpdateGroupUseCase>(
       () => UpdateGroupUseCase(respository: sl.call()));
+  sl.registerLazySingleton<JoinGroupUseCase>(
+      () => JoinGroupUseCase(respository: sl.call()));
 
   //Responsitory
   sl.registerLazySingleton<ApiRespository>(

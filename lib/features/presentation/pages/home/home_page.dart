@@ -36,29 +36,6 @@ class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   int _select = 0;
 
-  List<Widget> listPersonActi = const [
-    PersonAcityItem(
-        image: 'assets/images/hoang.png',
-        name: 'Truong Huynh Duc Hoang',
-        isActive: true),
-    PersonAcityItem(
-        image: 'assets/images/face.png',
-        name: 'Nguyen Minh Hung',
-        isActive: true),
-    PersonAcityItem(
-        name: 'Ngo Mai Quoc Thang',
-        image: 'assets/images/app_icon.png',
-        isActive: true),
-    PersonAcityItem(
-        image: 'assets/images/google.png',
-        name: 'Vo Dang Thien Khai',
-        isActive: true),
-    PersonAcityItem(
-        image: 'assets/images/gmail.png',
-        name: 'Nguyen Thanh Tung',
-        isActive: true),
-  ];
-
   List<Map<String, dynamic>> listOptionWidgets = [
     {
       'icon': Icons.message,
@@ -85,8 +62,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // final widthDevice = MediaQuery.of(context).size.width;
-    // final heightDevice = MediaQuery.of(context).size.height;
     return BlocBuilder<UserCubit, UserState>(
       builder: (context, userState) {
         if (userState is UserLoaded) {
@@ -162,11 +137,8 @@ class _HomePageState extends State<HomePage> {
               decoration: InputDecoration(
                 hintText: "Search...",
                 hintStyle: TextStyle(color: Colors.grey.shade600),
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: Colors.grey.shade600,
-                  size: 20,
-                ),
+                prefixIcon:
+                    Icon(Icons.search, color: Colors.grey.shade600, size: 20),
                 filled: true,
                 fillColor: Colors.grey.shade100,
                 contentPadding: const EdgeInsets.all(8),
@@ -190,7 +162,13 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const SizedBox(width: horizontalAllSize - 5.0),
-              ...listPersonActi.map((e) => e),
+              ...users.map((e) => e.uid != currentUser.uid
+                  ? PersonAcityItem(
+                      image: e.profileUrl,
+                      name: e.name,
+                      isActive: true,
+                    )
+                  : const SizedBox()),
             ],
           ),
           // const SizedBox(height: 10.0),
@@ -310,22 +288,40 @@ class ListGroupField extends StatelessWidget {
             children: [
               ...groupState.groups.map(
                 (e) => ChatItem(
-                  name: e.groupName,
-                  url: e.groupProfileImage,
-                  lastMess: {
-                    'mess': e.lastMessage,
-                    'time': DateTime.now(),
-                  },
-                  callback: () => Navigator.of(context).pushNamed(
-                    PageConst.singleChatPage,
-                    arguments: SingleChatEntity(
-                      username: currentUser.name,
-                      groupId: e.groupId,
-                      groupName: e.groupName,
-                      uid: currentUser.uid,
+                    name: e.groupName,
+                    url: e.groupProfileImage,
+                    lastMess: {
+                      'mess': e.lastMessage,
+                      'time': DateTime.now(),
+                    },
+                    callback: () {
+                      BlocProvider.of<GroupCubit>(context)
+                          .joinGroup(
+                              groupEntity: GroupEntity(groupId: e.groupId))
+                          .then((value) {
+                        BlocProvider.of<GroupCubit>(context).getGroups();
+                      });
+                      Navigator.pushNamed(
+                        context,
+                        PageConst.singleChatPage,
+                        arguments: SingleChatEntity(
+                          username: currentUser.name,
+                          groupId: e.groupId,
+                          groupName: e.groupName,
+                          uid: currentUser.uid,
+                        ),
+                      );
+                    }
+                    // Navigator.of(context).pushNamed(
+                    //   PageConst.singleChatPage,
+                    //   arguments: SingleChatEntity(
+                    //     username: currentUser.name,
+                    //     groupId: e.groupId,
+                    //     groupName: e.groupName,
+                    //     uid: currentUser.uid,
+                    //   ),
+                    // ),
                     ),
-                  ),
-                ),
               )
             ],
           );

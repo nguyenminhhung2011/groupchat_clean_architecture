@@ -256,4 +256,21 @@ class ApiRemoteDataSourceImpl implements ApiRemoteDataSource {
 
     groupCollection.doc(groupEntity.groupId).update(groupInformation);
   }
+
+  @override
+  Future<void> joinGroup(GroupEntity groupEntity) async {
+    final groupChatChannelCollection = firestore.collection("groupChatChannel");
+
+    groupChatChannelCollection
+        .doc(groupEntity.groupId)
+        .get()
+        .then((groupChannel) {
+      Map<String, dynamic> groupMap = {"groupChannelId": groupEntity.groupId};
+      if (!groupChannel.exists) {
+        groupChatChannelCollection.doc(groupEntity.groupId).set(groupMap);
+        return;
+      }
+      return;
+    });
+  }
 }

@@ -10,6 +10,7 @@ abstract class ApiRespository {
 
   Future<void> getCreateGroup(GroupEntity groupEntity);
   Stream<List<GroupEntity>> getGroups();
+  Future<void> joinGroup(GroupEntity groupEntity);
   // Future<void> joinGroup(GroupEntity groupEntity);
   // Future<void> updateGroup(GroupEntity groupEntity);
 
