@@ -9,6 +9,9 @@ import 'package:groupchat_clean_architecture/features/presentation/cubit/chat/ch
 import 'package:groupchat_clean_architecture/features/presentation/cubit/group/group_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/widgets/theme/style.dart';
 import 'package:groupchat_clean_architecture/features/presentation/widgets/theme/template.dart';
+
+import '../../widgets/rec_card.dart';
+import '../../widgets/send_card.dart';
 // import 'package:bubble/bubble.dart';s
 
 class SingleChatPage extends StatefulWidget {
@@ -52,6 +55,7 @@ class _SingleChatPageState extends State<SingleChatPage> {
           if (chatState is ChatLoaded) {
             return Column(
               children: [
+                const SizedBox(height: 10.0),
                 _listMessage(chatState),
                 _messgeField(),
               ],
@@ -69,12 +73,32 @@ class _SingleChatPageState extends State<SingleChatPage> {
   Expanded _listMessage(ChatLoaded message) {
     return Expanded(
       child: ListView.builder(
+        physics: const BouncingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
+        ),
         controller: _scrollController,
         itemCount: message.chats.length,
         itemBuilder: (_, index) {
           if (message.chats[index].senderId == widget.singleChatEntity.uid) {
-            return Container(margin: const EdgeInsets.only());
-          } else {}
+            return SendCard(
+              title: message.chats[index].content!,
+              check: true,
+              typeMess: message.chats[index].type! == "TEXT" ? 0 : 1,
+              imageMess: "",
+              time: DateTime.fromMicrosecondsSinceEpoch(
+                  message.chats[index].time!.microsecondsSinceEpoch),
+            );
+          } else {
+            return RecCard(
+              time: DateTime.fromMicrosecondsSinceEpoch(
+                  message.chats[index].time!.microsecondsSinceEpoch),
+              title: message.chats[index].content!,
+              avt: "",
+              check: true,
+              typeMess: message.chats[index].type! == "TEXT" ? 0 : 1,
+              imageMess: "",
+            );
+          }
         },
       ),
     );

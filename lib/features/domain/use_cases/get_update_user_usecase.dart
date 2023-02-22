@@ -8,3 +8,4 @@ class GetUpdateUserUseCase {
     return respository.getUpdateUser(user);
   }
 }
+  
