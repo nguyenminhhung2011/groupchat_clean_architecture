@@ -9,6 +9,7 @@ import 'package:groupchat_clean_architecture/features/presentation/pages/auth/si
 import 'package:groupchat_clean_architecture/features/presentation/pages/auth/sign_up_with_email_password.dart';
 import 'package:groupchat_clean_architecture/features/presentation/pages/home/home_page.dart';
 import 'package:groupchat_clean_architecture/features/presentation/pages/home/profile_page.dart';
+import 'package:groupchat_clean_architecture/features/presentation/pages/single_chat/setting_single_chat_page.dart';
 import 'package:groupchat_clean_architecture/features/presentation/pages/single_chat/single_chat_page.dart';
 import 'package:groupchat_clean_architecture/page_const.dart';
 
@@ -52,6 +53,17 @@ class OnGenerateRoute {
             return materialBuilder(
               widget: ErrorPage(),
             );
+          }
+        }
+      case PageConst.settingSingleChatPage:
+        {
+          if (args is String) {
+            return materialBuilder(
+                widget: SettingSingleChatPage(
+              groupId: args,
+            ));
+          } else {
+            return materialBuilder(widget: ErrorPage());
           }
         }
       case PageConst.profilePage:

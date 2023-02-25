@@ -8,4 +8,5 @@ class PageConst {
   static const String signInWithEmailPassword = "signInWithEmailPassword";
   static const String profilePage = "profilePage";
   static const String singleChatPage = "singleChatPage";
+  static const String settingSingleChatPage = "settingSingleChatPage";
 }

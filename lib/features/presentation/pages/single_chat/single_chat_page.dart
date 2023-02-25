@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +11,7 @@ import 'package:groupchat_clean_architecture/features/presentation/cubit/chat/ch
 import 'package:groupchat_clean_architecture/features/presentation/cubit/group/group_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/widgets/theme/style.dart';
 import 'package:groupchat_clean_architecture/features/presentation/widgets/theme/template.dart';
+import 'package:groupchat_clean_architecture/page_const.dart';
 
 import '../../widgets/rec_card.dart';
 import '../../widgets/send_card.dart';
@@ -49,6 +52,14 @@ class _SingleChatPageState extends State<SingleChatPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(widget.singleChatEntity.groupName),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings, color: Colors.white),
+            onPressed: () => Navigator.pushNamed(
+                context, PageConst.settingSingleChatPage,
+                arguments: widget.singleChatEntity.groupId),
+          ),
+        ],
       ),
       body: BlocBuilder<ChatCubit, ChatState>(
         builder: (context, chatState) {
@@ -71,6 +82,11 @@ class _SingleChatPageState extends State<SingleChatPage> {
   }
 
   Expanded _listMessage(ChatLoaded message) {
+    Timer(Duration(microseconds: 100), () {
+      _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInQuad);
+    });
     return Expanded(
       child: ListView.builder(
         physics: const BouncingScrollPhysics(
