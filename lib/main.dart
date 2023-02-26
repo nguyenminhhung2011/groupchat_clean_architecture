@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/auth/auth_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/chat/chat_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/group/group_cubit.dart';
+import 'package:groupchat_clean_architecture/features/presentation/cubit/members/member_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/user/user_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/pages/auth/login_page.dart';
 import 'package:groupchat_clean_architecture/features/presentation/pages/auth/sign_in_with_pn_page.dart';
@@ -42,6 +43,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<ChatCubit>(
           create: (_) => di.sl<ChatCubit>(),
+        ),
+        BlocProvider<MemberCubit>(
+          create: (_) => di.sl<MemberCubit>(),
         )
       ],
       child: MaterialApp(

@@ -223,6 +223,7 @@ class ApiRemoteDataSourceImpl implements ApiRemoteDataSource {
     groupCollection.doc(groupId).get().then((value) {
       final newGroup = GroupModel(
         groupId: groupId,
+        uid: groupEntity.uid,
         limitUsers: groupEntity.limitUsers,
         joinUsers: groupEntity.joinUsers,
         groupProfileImage: groupEntity.groupProfileImage,
@@ -245,14 +246,18 @@ class ApiRemoteDataSourceImpl implements ApiRemoteDataSource {
     Map<String, dynamic> groupInformation = Map();
     final groupCollection = firestore.collection('groups');
     if (groupEntity.groupProfileImage != null &&
-        groupEntity.groupProfileImage != "")
+        groupEntity.groupProfileImage != "") {
       groupInformation['groupProfileImage'] = groupEntity.groupProfileImage;
-    if (groupEntity.groupName != null && groupEntity.groupName != "")
+    }
+    if (groupEntity.groupName != null && groupEntity.groupName != "") {
       groupInformation["groupName"] = groupEntity.groupName;
-    if (groupEntity.lastMessage != null && groupEntity.lastMessage != "")
+    }
+    if (groupEntity.lastMessage != null && groupEntity.lastMessage != "") {
       groupInformation["lastMessage"] = groupEntity.lastMessage;
-    if (groupEntity.creationTime != null)
+    }
+    if (groupEntity.creationTime != null) {
       groupInformation["creationTime"] = groupEntity.creationTime;
+    }
 
     groupCollection.doc(groupEntity.groupId).update(groupInformation);
   }
@@ -260,17 +265,43 @@ class ApiRemoteDataSourceImpl implements ApiRemoteDataSource {
   @override
   Future<void> joinGroup(GroupEntity groupEntity) async {
     final groupChatChannelCollection = firestore.collection("groupChatChannel");
-
     groupChatChannelCollection
         .doc(groupEntity.groupId)
         .get()
         .then((groupChannel) {
-      Map<String, dynamic> groupMap = {"groupChannelId": groupEntity.groupId};
+      print("Test uid: " + groupEntity.uid);
+      Map<String, dynamic> groupMap = {
+        "groupChannelId": groupEntity.groupId,
+        "members": [groupEntity.uid]
+      };
       if (!groupChannel.exists) {
         groupChatChannelCollection.doc(groupEntity.groupId).set(groupMap);
         return;
       }
       return;
     });
+  }
+
+  @override
+  Future<void> addMemberToGroup(String uid, GroupEntity group) async {
+    final groupChatChannelCollection = firestore.collection('groupChatChannel');
+    groupChatChannelCollection.doc(group.groupId).get().then((groupChannel) {
+      if (!groupChannel['members'].contains(uid)) {
+        Map<String, dynamic> groupMap = {
+          "members": groupChannel['members'].add(uid)
+        };
+        groupChatChannelCollection.doc(group.groupId).set(groupMap);
+      }
+    });
+  }
+
+  @override
+  Future<List<String>> getMembersFromGroup(String channelId) async {
+    return [];
+  }
+
+  @override
+  static Future<List<String>> getMembers(String channelId) async {
+    return [];
   }
 }

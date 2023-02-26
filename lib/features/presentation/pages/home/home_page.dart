@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> {
             context: context,
             builder: (context) => Dialog(
               backgroundColor: Colors.transparent,
-              child: CreateGroupDiallog(uid: widget.uid),
+              child: CreateGroupDiallog(uid: currentUser.uid),
             ),
           );
         },
@@ -287,41 +287,38 @@ class ListGroupField extends StatelessWidget {
           return Column(
             children: [
               ...groupState.groups.map(
-                (e) => ChatItem(
-                    name: e.groupName,
-                    url: e.groupProfileImage,
-                    lastMess: {
-                      'mess': e.lastMessage,
-                      'time': DateTime.now(),
-                    },
-                    callback: () {
-                      BlocProvider.of<GroupCubit>(context)
-                          .joinGroup(
-                              groupEntity: GroupEntity(groupId: e.groupId))
-                          .then((value) {
-                        BlocProvider.of<GroupCubit>(context).getGroups();
-                      });
-                      Navigator.pushNamed(
-                        context,
-                        PageConst.singleChatPage,
-                        arguments: SingleChatEntity(
-                          username: currentUser.name,
-                          groupId: e.groupId,
-                          groupName: e.groupName,
-                          uid: currentUser.uid,
-                        ),
-                      );
-                    }
-                    // Navigator.of(context).pushNamed(
-                    //   PageConst.singleChatPage,
-                    //   arguments: SingleChatEntity(
-                    //     username: currentUser.name,
-                    //     groupId: e.groupId,
-                    //     groupName: e.groupName,
-                    //     uid: currentUser.uid,
-                    //   ),
-                    // ),
-                    ),
+                (e) => (e.uid == currentUser.uid)
+                    ? ChatItem(
+                        name: e.groupName,
+                        url: e.groupProfileImage,
+                        lastMess: {
+                          'mess': e.lastMessage,
+                          'time': DateTime.now(),
+                        },
+                        callback: () {
+                          if (currentUser.uid == e.uid) {
+                            BlocProvider.of<GroupCubit>(context)
+                                .joinGroup(
+                              groupEntity:
+                                  GroupEntity(groupId: e.groupId, uid: e.uid),
+                            )
+                                .then((value) {
+                              BlocProvider.of<GroupCubit>(context).getGroups();
+                            });
+                          }
+                          Navigator.pushNamed(
+                            context,
+                            PageConst.singleChatPage,
+                            arguments: SingleChatEntity(
+                              username: currentUser.name,
+                              groupId: e.groupId,
+                              groupName: e.groupName,
+                              uid: currentUser.uid,
+                            ),
+                          );
+                        },
+                      )
+                    : const SizedBox(),
               )
             ],
           );
@@ -333,65 +330,3 @@ class ListGroupField extends StatelessWidget {
     );
   }
 }
-
-// Widget profileWidget({String? imageUrl,File? image}){
-//   print("image value $image");
-//   if (image==null){
-//     if (imageUrl==null)
-//       return Image.asset(
-//         'assets/profile_default.png',
-//         fit: BoxFit.cover,
-//       );
-//     else
-//       return CachedNetworkImage(
-//         imageUrl: "$imageUrl",
-//         fit: BoxFit.cover,
-//         progressIndicatorBuilder: (context, url, downloadProgress) =>
-//             SizedBox(height: 50,width: 50,child: Container(margin: EdgeInsets.all(20),child: CircularProgressIndicator())),
-//         errorWidget: (context, url, error) => Icon(Icons.error),
-//       );
-//   }else{
-//     return Image.file(image,fit: BoxFit.cover,);
-//   }
-// }
-
-// Padding(
-          //   padding: const EdgeInsets.symmetric(horizontal: horizontalAllSize),
-          //   child: Row(
-          //     children: [
-          //       Text('All Group',
-          //           style: headerText1.copyWith(fontSize: medumSizeText)),
-          //       const Spacer(),
-          //       InkWell(
-          //         onTap: () {
-          //           showDialog(
-          //             context: context,
-          //             builder: (context) => Dialog(
-          //               backgroundColor: Colors.transparent,
-          //               child: CreateGroupDiallog(),
-          //             ),
-          //           );
-          //         },
-          //         child: Container(
-          //           padding: const EdgeInsets.symmetric(
-          //               horizontal: 10.0, vertical: 5.0),
-          //           decoration: BoxDecoration(
-          //             borderRadius: BorderRadius.circular(5.0),
-          //             color: darkPrimaryColor,
-          //           ),
-          //           child: Row(
-          //             mainAxisSize: MainAxisSize.min,
-          //             children: [
-          //               Text(
-          //                 'Create new group ',
-          //                 style: headerText1.copyWith(
-          //                     color: Colors.white, fontSize: lowSizeText),
-          //               ),
-          //               const Icon(Icons.add, color: Colors.white, size: 14.0),
-          //             ],
-          //           ),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),

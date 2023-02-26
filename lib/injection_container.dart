@@ -6,6 +6,7 @@ import 'package:groupchat_clean_architecture/features/data/remote_data_source/ap
 import 'package:groupchat_clean_architecture/features/data/remote_data_source/api_remote_data_source_impl.dart';
 import 'package:groupchat_clean_architecture/features/data/repositories/api_respositoy_impl.dart';
 import 'package:groupchat_clean_architecture/features/domain/repositories/api_respositoy.dart';
+import 'package:groupchat_clean_architecture/features/domain/use_cases/add_member_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/change_password_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/forgot_password_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/get_all_user_use_case.dart';
@@ -13,6 +14,7 @@ import 'package:groupchat_clean_architecture/features/domain/use_cases/get_creat
 import 'package:groupchat_clean_architecture/features/domain/use_cases/get_create_group_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/get_current_uid_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/get_groups_usecase.dart';
+import 'package:groupchat_clean_architecture/features/domain/use_cases/get_member_from_group_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/get_message_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/get_update_user_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/google_auth_usecase.dart';
@@ -28,6 +30,7 @@ import 'package:groupchat_clean_architecture/features/presentation/cubit/auth/au
 import 'package:groupchat_clean_architecture/features/presentation/cubit/chat/chat_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/credential/credential_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/group/group_cubit.dart';
+import 'package:groupchat_clean_architecture/features/presentation/cubit/members/member_cubit.dart';
 import 'package:groupchat_clean_architecture/features/presentation/cubit/user/user_cubit.dart';
 
 final sl = GetIt.instance;
@@ -61,14 +64,21 @@ Future<void> init() async {
     ),
   );
 
-  sl.registerFactory<GroupCubit>(() => GroupCubit(
+  sl.registerFactory<GroupCubit>(
+    () => GroupCubit(
       joinGroupUseCase: sl.call(),
       getGroupsUseCase: sl.call(),
       getCreateGroupUseCase: sl.call(),
-      updateGroupUseCase: sl.call()));
+      updateGroupUseCase: sl.call(),
+      addMemberUseCase: sl.call(),
+    ),
+  );
+
+  sl.registerFactory(() => MemberCubit());
 
   sl.registerFactory<ChatCubit>(
     () => ChatCubit(
+      getMemberFromGroupUseCase: sl.call(),
       getMessageUseCase: sl.call(),
       sendMessageUseCase: sl.call(),
     ),
@@ -111,6 +121,10 @@ Future<void> init() async {
       () => UpdateGroupUseCase(respository: sl.call()));
   sl.registerLazySingleton<JoinGroupUseCase>(
       () => JoinGroupUseCase(respository: sl.call()));
+  sl.registerLazySingleton<AddMemberUseCase>(
+      () => AddMemberUseCase(respository: sl.call()));
+  sl.registerLazySingleton<GetMemberFromGroupUseCase>(
+      () => GetMemberFromGroupUseCase(respository: sl.call()));
 
   //Responsitory
   sl.registerLazySingleton<ApiRespository>(

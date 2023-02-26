@@ -80,10 +80,6 @@ class OnGenerateRoute {
             );
           }
         }
-      // case PageConst.homePage:
-      //   {
-      //     return materialBuilder(widget: HomePage());
-      //   }
       default:
         return materialBuilder(widget: ErrorPage());
     }

@@ -32,6 +32,9 @@ abstract class ApiRespository {
   Future<void> sendTextMessage(
       TextMessageEntity textMessageEntity, String channelId);
   Stream<List<TextMessageEntity>> getMessages(String channelId);
+  Future<void> addMemberToGroup(String uid, GroupEntity group);
+  Future<List<String>> getMembersFromGroup(String channelId);
+  // Stream<List<Map<String, UserEntity>>> getMembersFromGroup();
   // Future<void> addToMyChat(MyChatEntity myChatEntity);
   // Stream<List<MyChatEntity>> getMyChat(String uid);
 }

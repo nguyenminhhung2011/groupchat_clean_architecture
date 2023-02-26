@@ -29,6 +29,8 @@ abstract class ApiRemoteDataSource {
   Future<void> updateGroup(GroupEntity groupEntity);
   Future<void> getCreateGroup(GroupEntity groupEntity);
   Future<void> joinGroup(GroupEntity groupEntity);
+  Future<void> addMemberToGroup(String uid, GroupEntity group);
+  Future<List<String>> getMembersFromGroup(String channelId);
 
   // Future<String> createOneToOneChatChannel(EngageUserEntity engageUserEntity);
   // Future<String> getChannelId(EngageUserEntity engageUserEntity);

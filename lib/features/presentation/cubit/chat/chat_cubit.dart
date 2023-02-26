@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupchat_clean_architecture/features/domain/entities/chat_entity.dart';
 import 'package:groupchat_clean_architecture/features/domain/entities/text_message_entity.dart';
+import 'package:groupchat_clean_architecture/features/domain/use_cases/get_member_from_group_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/get_message_usecase.dart';
 import 'package:groupchat_clean_architecture/features/domain/use_cases/send_text_message_usecase.dart';
 
@@ -15,8 +16,12 @@ part 'chat_state.dart';
 class ChatCubit extends Cubit<ChatState> {
   final GetMessageUseCase getMessageUseCase;
   final SendMessageUseCase sendMessageUseCase;
-  ChatCubit({required this.getMessageUseCase, required this.sendMessageUseCase})
-      : super(ChatInitial());
+  final GetMemberFromGroupUseCase getMemberFromGroupUseCase;
+  ChatCubit({
+    required this.getMessageUseCase,
+    required this.sendMessageUseCase,
+    required this.getMemberFromGroupUseCase,
+  }) : super(ChatInitial());
 
   Future<void> getMessages({required String channelId}) async {
     emit(ChatLoading());
@@ -38,4 +43,8 @@ class ChatCubit extends Cubit<ChatState> {
       emit(ChatFailure());
     }
   }
+
+  // Future<void> getMembers({required String chennelId}) async{
+  //   final
+  // }
 }
